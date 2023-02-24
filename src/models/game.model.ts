@@ -7,6 +7,10 @@ const gameSchema: Schema = new Schema({
     required: true,
     unique: true,
   },
+  started: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const gameModel = model<Game & Document>('Game', gameSchema);

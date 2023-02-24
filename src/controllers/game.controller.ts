@@ -24,6 +24,17 @@ class GamesController {
       next(error);
     }
   };
+
+  public startGame = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const gameId: string = req.params.id;
+      const updateGameData: Game = await this.gameService.startGame(gameId);
+
+      res.status(200).json({ data: updateGameData, message: 'updated' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default GamesController;
