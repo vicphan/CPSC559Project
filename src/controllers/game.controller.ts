@@ -35,6 +35,17 @@ class GamesController {
       next(error);
     }
   };
+
+  public endGame = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const gameId: string = req.params.id;
+      const endGameData: Game = await this.gameService.endGame(gameId);
+
+      res.status(200).json({ data: endGameData, message: 'deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default GamesController;

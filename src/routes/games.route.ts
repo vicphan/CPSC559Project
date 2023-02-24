@@ -16,6 +16,7 @@ class GamesRoute implements Routes {
     this.router.get(`${this.path}`, this.gamesController.getGames);
     this.router.post(`${this.path}`, this.gamesController.createGame);
     this.router.put(`${this.path}/:id`, this.gamesController.startGame);
+    this.router.delete(`${this.path}/:id`, this.gamesController.endGame);
   }
 }
 

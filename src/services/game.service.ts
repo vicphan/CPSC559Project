@@ -1,11 +1,14 @@
 import { hash } from 'bcrypt';
 import { HttpException } from '@exceptions/HttpException';
 import { Game } from '@interfaces/games.interface';
+import { Player } from '@interfaces/players.interface';
 import gameModel from '@models/game.model';
+import playerModel from '@models/player.model';
 import { isEmpty } from '@utils/util';
 
 class GameService {
   public games = gameModel;
+  public players = playerModel;
 
   public async findAllGames(): Promise<Game[]> {
     const games: Game[] = await this.games.find();
@@ -42,6 +45,20 @@ class GameService {
     const started = true;
 
     const updateGameById: Game = await this.games.findByIdAndUpdate(gameId, { started: started });
+    if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
+
+    return updateGameById;
+  }
+
+  public async endGame(gameId: string): Promise<Game> {
+
+    var deletedPlayer: Player = await this.players.findOneAndDelete({game: gameId});
+    while (deletedPlayer) 
+    {
+      deletedPlayer = await this.players.findOneAndDelete({game: gameId});
+    }
+
+    const updateGameById: Game = await this.games.findByIdAndDelete(gameId);
     if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
 
     return updateGameById;
