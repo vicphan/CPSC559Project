@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Player } from '@interfaces/players.interface';
 import playerService from '@services/player.service';
+import { CreatePlayerDto } from '@dtos/players.dto';
 
 class PlayersController {
   public playerService = new playerService();
@@ -17,7 +18,8 @@ class PlayersController {
 
   public createPlayer = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const createPlayerData: Player = await this.playerService.createPlayer();
+      const playerData: CreatePlayerDto = req.body;
+      const createPlayerData: Player = await this.playerService.createPlayer(playerData);
 
       res.status(201).json({ data: createPlayerData, message: 'created' });
     } catch (error) {

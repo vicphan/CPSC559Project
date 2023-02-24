@@ -5,6 +5,7 @@ import { Game } from '@interfaces/games.interface';
 import playerModel from '@models/player.model';
 import { isEmpty } from '@utils/util';
 import gameModel from '@/models/game.model';
+import { CreatePlayerDto } from '@dtos/players.dto';
 
 class PlayerService {
   public players = playerModel;
@@ -16,10 +17,14 @@ class PlayerService {
     return players;
   }
 
-  public async createPlayer(): Promise<Player> {
+  public async createPlayer(playerData: CreatePlayerDto): Promise<Player> {
+    if (isEmpty(playerData)) throw new HttpException(400, "playerData is empty");
 
-    const name = "Name";
-    const game: Game = await this.games.findOne({joinCode: "3fdrb"})
+    const name = playerData.name;
+    
+    const game: Game = await this.games.findOne({joinCode: playerData.joinCode})
+    if (!game) throw new HttpException(404, `Game ${playerData.joinCode} could not be found`);
+
     const score = 0;
 
     const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score  });
