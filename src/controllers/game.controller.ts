@@ -14,6 +14,16 @@ class GamesController {
       next(error);
     }
   };
+
+  public createGame = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const createGameData: Game = await this.gameService.createGame();
+
+      res.status(201).json({ data: createGameData, message: 'created' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default GamesController;

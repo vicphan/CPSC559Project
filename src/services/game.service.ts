@@ -13,6 +13,15 @@ class GameService {
     return games;
   }
 
+  public async createGame(): Promise<Game> {
+
+    const joinCode = (Math.random() + 1).toString(36).substring(7);
+    console.log("Joing Code: " + joinCode.toString());
+    const createGameData: Game = await this.games.create({ joinCode: joinCode });
+
+    return createGameData;
+  }
+
 }
 
 export default GameService;
