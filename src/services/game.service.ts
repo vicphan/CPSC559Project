@@ -13,9 +13,23 @@ class GameService {
     return games;
   }
 
+  public createJoinCode()
+  {
+    return (Math.random() + 1).toString(36).substring(7);
+  }
+
   public async createGame(): Promise<Game> {
 
-    const joinCode = (Math.random() + 1).toString(36).substring(7);
+    var joinCode = this.createJoinCode();
+    const findGame: Game = await this.games.findOne({joinCode: joinCode})
+
+    while(findGame)
+    {
+      joinCode =  this.createJoinCode();
+      const findGame: Game = await this.games.findOne({joinCode: joinCode})
+    }
+    
+
     console.log("Joing Code: " + joinCode.toString());
     const createGameData: Game = await this.games.create({ joinCode: joinCode });
 
