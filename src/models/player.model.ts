@@ -1,4 +1,5 @@
 import { model, Schema, Document } from 'mongoose';
+import { Player } from '@interfaces/players.interface';
 const mongoose = require("mongoose");
 
 const playerSchema: Schema = new Schema({
@@ -18,6 +19,6 @@ const playerSchema: Schema = new Schema({
   }
 });
 
-const playerModel = model('Player', playerSchema);
+const playerModel = model<Player & Document>('Player', playerSchema);
 
 export default playerModel;
