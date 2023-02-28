@@ -1,4 +1,3 @@
-import { hash } from 'bcrypt';
 import { HttpException } from '@exceptions/HttpException';
 import { Player } from '@interfaces/players.interface';
 import { Game } from '@interfaces/games.interface';
@@ -23,24 +22,23 @@ class PlayerService {
     if (isEmpty(playerData)) throw new HttpException(400, "playerData is empty");
 
     const name = playerData.name;
-
+    
     const game: Game = await this.games.findOne({joinCode: playerData.joinCode})
     if (!game) throw new HttpException(404, `Game ${playerData.joinCode} could not be found`);
 
     const score = 0;
 
-    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score });
+    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score  });
 
     return createdPlayerData;
   }
-
+  
   // finds the players of the specified game
   public async findGamePlayers(gameID: Game): Promise<Player[]> {
     const players: Player[] = await this.players.find({game: gameID});
   
     return players;
   }
-
 }
 
 export default PlayerService;

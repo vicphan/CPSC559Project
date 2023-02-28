@@ -39,7 +39,6 @@ class GameService {
     var started = false;
     let leaderboard: String[] = [];
 
-    console.log("Join Code: " + joinCode.toString());
     const createGameData: Game = await this.games.create({ joinCode: joinCode, started: started, leaderboard: leaderboard });
 
     return createGameData;
