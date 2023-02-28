@@ -7,6 +7,7 @@ import { SubmitQuestionDto } from '@/dtos/submitQuestion.dto';
 class PlayersController {
   public playerService = new playerService();
 
+  // gets all players from all games
   public getPlayers = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const findAllPlayersData: Player[] = await this.playerService.findAllPlayers();
@@ -17,6 +18,7 @@ class PlayersController {
     }
   };
 
+  // creates a new player when they join a game
   public createPlayer = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const playerData: CreatePlayerDto = req.body;

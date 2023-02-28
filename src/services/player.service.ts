@@ -1,4 +1,3 @@
-import { hash } from 'bcrypt';
 import { HttpException } from '@exceptions/HttpException';
 import { Player } from '@interfaces/players.interface';
 import { Game } from '@interfaces/games.interface';
@@ -16,12 +15,14 @@ class PlayerService {
   public questions = questionModel;
 
 
+  // returns all the players for all games
   public async findAllPlayers(): Promise<Player[]> {
     const players: Player[] = await this.players.find();
-    
+
     return players;
   }
 
+  // creates a new player when they join a game
   public async createPlayer(playerData: CreatePlayerDto): Promise<Player> {
     if (isEmpty(playerData)) throw new HttpException(400, "playerData is empty");
 
@@ -56,6 +57,12 @@ class PlayerService {
     return updatedPlayer;
   }
 
+  // finds the players of the specified game
+  public async findGamePlayers(gameID: Game): Promise<Player[]> {
+    const players: Player[] = await this.players.find({game: gameID});
+  
+    return players;
+  }
 }
 
 export default PlayerService;
