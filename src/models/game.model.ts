@@ -1,4 +1,5 @@
 import { model, Schema, Document } from 'mongoose';
+import { Game } from '@interfaces/games.interface';
 
 const gameSchema: Schema = new Schema({
   joinCode: {
@@ -8,6 +9,6 @@ const gameSchema: Schema = new Schema({
   },
 });
 
-const gameModel = model('Game', gameSchema);
+const gameModel = model<Game & Document>('Game', gameSchema);
 
 export default gameModel;
