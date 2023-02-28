@@ -5,11 +5,11 @@ const questionSchema: Schema = new Schema({
     type: String,
     required: true,
   },
-  correctAnswer: {
-    type: String,
+  correctAnswerIndex: {
+    type: Number,
     required: true,
   },
-  wrongAnswers: [{
+  answers: [{
     type: String,
   }]
 });
