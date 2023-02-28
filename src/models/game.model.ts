@@ -11,6 +11,11 @@ const gameSchema: Schema = new Schema({
     type: Boolean,
     required: true,
   },
+  leaderboard: {
+    type: Array<string>,
+    ref: 'Leaderboard',
+    required: true,
+  },
 });
 
 const gameModel = model<Game & Document>('Game', gameSchema);
