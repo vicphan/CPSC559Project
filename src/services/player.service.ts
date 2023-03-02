@@ -42,18 +42,17 @@ class PlayerService {
   public async submitAnswer(playerId: string, questionData: SubmitQuestionDto): Promise<Player> {
     if (isEmpty(questionData)) throw new HttpException(400, "questionData is empty");
     
-    const question: Question = await this.questions.findOne({prompt: questionData.prompt})
-    if (!question) throw new HttpException(404, `Question ${questionData.prompt} could not be found`);
+    const player: Player = await this.players.findOne({id: playerId});
+    if (!player) throw new HttpException(404, `Player could not be found`);
 
-    const player: Player = await this.players.findOne({_id: playerId})
-    var score = player.score;
+    var newPlayerScore = player.score;
 
-    if (questionData.answerIndex == question.correctAnswerIndex)
+    if (questionData.correctAnswer)
     {
-      score = score + 1;
+      newPlayerScore = newPlayerScore + 1;
     }
 
-    const updatedPlayer: Player = await this.players.findByIdAndUpdate(playerId, { score: score });
+    const updatedPlayer: Player = await this.players.findByIdAndUpdate(playerId, { score: newPlayerScore });
 
     return updatedPlayer;
   }
