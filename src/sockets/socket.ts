@@ -40,7 +40,7 @@ export function initializeSocket(app: Application) {
 
     socket.on('join-game-room-as-host', (code?: string) => {
       if (!!code) {
-        console.log(`Host joined room ${code}`);
+        // console.log(`Host joined room ${code}`);
         socket.join(code);
       }
     });
