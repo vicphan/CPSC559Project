@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Game } from '@interfaces/games.interface';
 import gameService from '@services/game.service';
+import { Question } from '@/interfaces/questions.interface';
 
 class GamesController {
   public gameService = new gameService();
@@ -62,6 +63,19 @@ class GamesController {
       next(error);
     }
   };
+
+  // gets the current question from the game
+  public getQuestion = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const gameId: string = req.params.id;
+      const question: Question = await this.gameService.getQuestion(gameId);
+
+      res.status(200).json({ data: question, message: 'question' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
 
   // gets a game by its game ID
   public getGameByID = async (req: Request, res: Response, next: NextFunction) => {

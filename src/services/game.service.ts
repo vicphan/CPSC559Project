@@ -5,11 +5,14 @@ import gameModel from '@models/game.model';
 import playerModel from '@models/player.model';
 import { isEmpty } from '@utils/util';
 import PlayerService from './player.service';
+import { Question } from '@/interfaces/questions.interface';
+import questionModel from '@/models/question.model';
 
 class GameService {
   public games = gameModel;
   public players = playerModel;
   public playerService = new PlayerService();
+  public questions = questionModel;
 
   // returns all the games running
   public async findAllGames(): Promise<Game[]> {
@@ -113,6 +116,19 @@ class GameService {
     if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
 
     return updateGameById;
+  }
+
+  // returns current question for game with ID
+  public async getQuestion(gameID: string): Promise<Question>
+  {
+    if (isEmpty(gameID)) throw new HttpException(400, "game is empty");
+    
+    const game: Game = await this.getGameByID(gameID);
+    if (!game) throw new HttpException(409, "Game doesn't exist");
+    
+    const question: Question = await this.questions.findOne({index: game.currentQuestion});
+
+    return question;
   }
 
   // updates the leader board with the players that have the top 10 scores 
