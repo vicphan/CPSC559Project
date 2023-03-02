@@ -17,7 +17,7 @@ class PlayersRoute implements Routes {
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.playersController.getPlayers);
     this.router.post(`${this.path}`, validationMiddleware(CreatePlayerDto, 'body'), this.playersController.createPlayer);
-    this.router.put(`${this.path}/:id`, validationMiddleware(SubmitQuestionDto, 'body'), this.playersController.submitAnswer);
+    this.router.put(`${this.path}/:name`, validationMiddleware(SubmitQuestionDto, 'body'), this.playersController.submitAnswer);
   }
 }
 

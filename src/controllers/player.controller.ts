@@ -32,9 +32,9 @@ class PlayersController {
 
   public submitAnswer = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const playerId: string = req.params.id;
+      const playerName: string = req.params.name;
       const answerData: SubmitQuestionDto = req.body;
-      const updatedPlayerData: Player = await this.playerService.submitAnswer(playerId, answerData);
+      const updatedPlayerData: Player = await this.playerService.submitAnswer(playerName, answerData);
 
       res.status(200).json(updatedPlayerData);
     } catch (error) {
