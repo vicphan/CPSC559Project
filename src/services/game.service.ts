@@ -51,6 +51,24 @@ class GameService {
     return game;
   }
 
+  // get all the active players in the game
+  public async getActivePlayers(gameID: string)
+  {
+    const game: Game = await this.games.findById({_id: gameID});
+
+    var playerList: Player[] = [];
+    var playerInGameCursor = this.players.find({game: gameID}).cursor();
+    for (let player: Player = await playerInGameCursor.next(); player != null; player = await playerInGameCursor.next()) 
+    {
+      if (player.active)
+      {
+        playerList.push(player);
+      }
+    }
+
+    return playerList;
+  }
+
   // starts a game when players are ready
   public async startGame(gameId: string): Promise<Game> {
 

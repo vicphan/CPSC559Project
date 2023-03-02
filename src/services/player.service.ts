@@ -32,8 +32,9 @@ class PlayerService {
     if (!game) throw new HttpException(404, `Game ${playerData.joinCode} could not be found`);
 
     const score = 0;
+    const active = true;
 
-    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score  });
+    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score, active: active  });
 
     return createdPlayerData;
   }
