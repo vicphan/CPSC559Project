@@ -76,6 +76,18 @@ class GamesController {
     }
   };
 
+  // Change to the next question
+  public nextQuestion = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const gameId: string = req.params.id;
+      const game: Game = await this.gameService.nextQuestion(gameId);
+
+      res.status(200).json({ data: game, message: 'question' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
 
   // gets a game by its game ID
   public getGameByID = async (req: Request, res: Response, next: NextFunction) => {

@@ -3,6 +3,6 @@ export interface Game {
     joinCode: string;
     started: boolean;
     leaderboard: Array<string>;
-    currentQuestion: Number;
+    currentQuestion: number;
   }
 

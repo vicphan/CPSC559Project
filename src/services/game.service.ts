@@ -131,6 +131,27 @@ class GameService {
     return question;
   }
 
+  // Move to the next question
+  public async nextQuestion(gameID: string): Promise<Game>
+  {
+    if (isEmpty(gameID)) throw new HttpException(400, "game is empty");
+    
+    const game: Game = await this.getGameByID(gameID);
+    if (!game) throw new HttpException(409, "Game doesn't exist");
+    
+    var nextQuestion = game.currentQuestion + 1;
+
+    const question: Question = await this.questions.findOne({index: nextQuestion});
+    if (!question)
+    {
+      nextQuestion = 0;
+    }
+
+    const updatedGame: Game = await this.games.findByIdAndUpdate(gameID, { currentQuestion: nextQuestion });
+
+    return updatedGame;
+  }
+
   // updates the leader board with the players that have the top 10 scores 
   // if there are less than 10 players, the leaderboard contains all the players
   public async updateLeaderboard(players: Player[]): Promise<string[]>
