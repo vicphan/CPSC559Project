@@ -20,8 +20,7 @@ class GamesController {
   public createGame = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const createGameData: Game = await this.gameService.createGame();
-
-      res.status(201).json({ data: createGameData, message: 'created' });
+      res.status(201).json(createGameData);
     } catch (error) {
       next(error);
     }
@@ -74,7 +73,6 @@ class GamesController {
       next(error);
     }
   };
-
 }
 
 export default GamesController;
