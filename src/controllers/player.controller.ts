@@ -12,7 +12,7 @@ class PlayersController {
     try {
       const findAllPlayersData: Player[] = await this.playerService.findAllPlayers();
 
-      res.status(200).json({ data: findAllPlayersData, message: 'findAll' });
+      res.status(200).json(findAllPlayersData);
     } catch (error) {
       next(error);
     }
@@ -24,7 +24,7 @@ class PlayersController {
       const playerData: CreatePlayerDto = req.body;
       const createPlayerData: Player = await this.playerService.createPlayer(playerData);
 
-      res.status(201).json({ data: createPlayerData, message: 'created' });
+      res.status(201).json(createPlayerData);
     } catch (error) {
       next(error);
     }
@@ -34,9 +34,9 @@ class PlayersController {
     try {
       const playerId: string = req.params.id;
       const answerData: SubmitQuestionDto = req.body;
-      const createPlayerData: Player = await this.playerService.submitAnswer(playerId, answerData);
+      const updatedPlayerData: Player = await this.playerService.submitAnswer(playerId, answerData);
 
-      res.status(200).json({ data: createPlayerData, message: 'updated' });
+      res.status(200).json(updatedPlayerData);
     } catch (error) {
       next(error);
     }
