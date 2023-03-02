@@ -16,7 +16,10 @@ const playerSchema: Schema = new Schema({
   score: {
     type: Number,
     required: true,
-  }
+  },
+  active: {
+    type: Boolean,
+  },
 });
 
 const playerModel = model<Player & Document>('Player', playerSchema);
