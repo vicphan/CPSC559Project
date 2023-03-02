@@ -3,5 +3,6 @@ export interface Question {
     prompt: string;
     correctAnswerIndex: Number;
     answers: string[];
+    index: Number;
   }
   

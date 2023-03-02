@@ -16,6 +16,11 @@ const gameSchema: Schema = new Schema({
     ref: 'Leaderboard',
     required: true,
   },
+  currentQuestion:
+  {
+    type: Number,
+    required: true,
+  }
 });
 
 const gameModel = model<Game & Document>('Game', gameSchema);

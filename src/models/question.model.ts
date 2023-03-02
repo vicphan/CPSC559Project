@@ -11,7 +11,12 @@ const questionSchema: Schema = new Schema({
   },
   answers: [{
     type: String,
-  }]
+  }],
+  index:
+  {
+    type: Number,
+    required: true,
+  }
 });
 
 const questionModel = model('Question', questionSchema);
