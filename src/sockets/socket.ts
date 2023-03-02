@@ -1,3 +1,4 @@
+import { getGameService } from '@/services/game.service';
 import { Application } from 'express';
 import { Socket, Server } from 'socket.io';
 
@@ -30,8 +31,10 @@ export function initializeSocket(app: Application) {
         console.log(`Joined room ${gameCode}. ${playerName}`);
         socket.join(gameCode);
         socket.data['playerName'] = playerName;
+        
         const hostRoom = getHostRoom(gameCode);
-        const players = await []; // await getPlayersFromRoom(gameCode);
+        const gameService = getGameService();
+        const players = await gameService.getActivePlayers(gameCode);
         io.to(hostRoom).emit('players-list', players);
       }
     });
