@@ -170,4 +170,11 @@ class GameService {
   }
 }
 
-export default GameService;
+let gs;
+
+export function getGameService(): GameService{
+  if(!gs){
+    gs = new GameService();
+  }
+  return gs;
+}

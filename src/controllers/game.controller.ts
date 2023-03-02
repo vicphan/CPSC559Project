@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { Game } from '@interfaces/games.interface';
-import gameService from '@services/game.service';
+import { getGameService } from '@/services/game.service';
 import { Question } from '@/interfaces/questions.interface';
 
 class GamesController {
-  public gameService = new gameService();
+  public gameService = getGameService();
 
   // gets all running games
   public getGames = async (req: Request, res: Response, next: NextFunction) => {
@@ -100,7 +100,6 @@ class GamesController {
       next(error);
     }
   };
-
 }
 
 export default GamesController;

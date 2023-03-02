@@ -13,6 +13,7 @@ import { dbConnection } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import { initializeSocket } from './sockets/socket';
 
 class App {
   public app: express.Application;
@@ -29,6 +30,7 @@ class App {
     this.initializeRoutes(routes);
     this.initializeSwagger();
     this.initializeErrorHandling();
+    this.initializeSockets();
   }
 
   public listen() {
@@ -87,6 +89,10 @@ class App {
 
   private initializeErrorHandling() {
     this.app.use(errorMiddleware);
+  }
+
+  private initializeSockets() {
+    initializeSocket(this.app);
   }
 }
 
