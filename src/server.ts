@@ -20,7 +20,8 @@ async function createQuestions()
             questionModel.create({ 
             prompt: questionList["questions"][i]["question"], 
             correctAnswerIndex: questionList["questions"][i]["correctIndex"], 
-            answers: questionList["questions"][i]["answers"] });
+            answers: questionList["questions"][i]["answers"],
+            index: i });
         }
     }
 }
