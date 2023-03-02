@@ -38,8 +38,8 @@ class GameService {
 
     var started = false;
     let leaderboard: String[] = [];
-
-    const createGameData: Game = await this.games.create({ joinCode: joinCode, started: started, leaderboard: leaderboard });
+    var currentQuestion = 0;
+    const createGameData: Game = await this.games.create({ joinCode: joinCode, started: started, leaderboard: leaderboard, currentQuestion: currentQuestion });
 
     return createGameData;
   }
