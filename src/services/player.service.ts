@@ -39,10 +39,11 @@ class PlayerService {
     return createdPlayerData;
   }
 
+  // Update the players score
   public async submitAnswer(playerId: string, questionData: SubmitQuestionDto): Promise<Player> {
     if (isEmpty(questionData)) throw new HttpException(400, "questionData is empty");
     
-    const player: Player = await this.players.findOne({id: playerId});
+    const player: Player = await this.players.findOne({_id: playerId});
     if (!player) throw new HttpException(404, `Player could not be found`);
 
     var newPlayerScore = player.score;
