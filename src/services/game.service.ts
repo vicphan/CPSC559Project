@@ -48,9 +48,11 @@ class GameService {
   }
 
   // returns a game found by its game ID
-  public async getGameByID(gameID: string): Promise<Game>
+  public async getGameByJoinCode(joinCode: string): Promise<Game>
   {
-    const game: Game = await this.games.findById({_id: gameID});
+    if (isEmpty(joinCode)) throw new HttpException(400, "No game code given");
+    const game: Game = await this.games.findOne({joinCode: joinCode});
+    if (!game) throw new HttpException(409, "No such game with joinCode: " + joinCode);
     return game;
   }
 
@@ -73,71 +75,67 @@ class GameService {
   }
 
   // starts a game when players are ready
-  public async startGame(gameId: string): Promise<Game> {
+  public async startGame(joinCode: string): Promise<Game> {
+    
+    const game: Game = await this.getGameByJoinCode(joinCode);
 
     const started = true;
 
-    const updateGameById: Game = await this.games.findByIdAndUpdate(gameId, { started: started });
+    const updateGameById: Game = await this.games.findByIdAndUpdate(game._id, { started: started });
     if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
 
     return updateGameById;
   }
 
   // ends the game when the host decides to or all questions have been answered
-  public async endGame(gameId: string): Promise<Game> {
+  public async endGame(joinCode: string): Promise<Game> {
 
-    var deletedPlayer: Player = await this.players.findOneAndDelete({game: gameId});
+    const game: Game = await this.getGameByJoinCode(joinCode);
+
+    var deletedPlayer: Player = await this.players.findOneAndDelete({game: game._id});
     while (deletedPlayer) 
     {
-      deletedPlayer = await this.players.findOneAndDelete({game: gameId});
+      deletedPlayer = await this.players.findOneAndDelete({game: game._id});
     }
 
-    const updateGameById: Game = await this.games.findByIdAndDelete(gameId);
+    const updateGameById: Game = await this.games.findByIdAndDelete(game._id);
     if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
 
     return updateGameById;
   }
 
   // returns game with updated leaderboard
-  public async getLeaderboard(gameID: string): Promise<Game>
+  public async getLeaderboard(joinCode: string): Promise<Game>
   {
-    if (isEmpty(gameID)) throw new HttpException(400, "game is empty");
-    
-    const playerGame: Game = await this.getGameByID(gameID);
+    const game: Game = await this.getGameByJoinCode(joinCode);
     
     // find all players
-    const players: Player[] = (await this.playerService.findGamePlayers(playerGame)).sort((a, b) => (a.score > b.score) ? 1 : -1);
+    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (a.score > b.score) ? 1 : -1);
     
     // get updated leaderboard
     let leaderboard: string[] = await this.updateLeaderboard(players);
 
     // update game's leaderboard
-    const updateGameById: Game = await this.games.findByIdAndUpdate(gameID, { leaderboard: leaderboard });
+    const updateGameById: Game = await this.games.findByIdAndUpdate(game._id, { leaderboard: leaderboard });
     if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
 
     return updateGameById;
   }
 
   // returns current question for game with ID
-  public async getQuestion(gameID: string): Promise<Question>
+  public async getQuestion(joinCode: string): Promise<Question>
   {
-    if (isEmpty(gameID)) throw new HttpException(400, "game is empty");
-    
-    const game: Game = await this.getGameByID(gameID);
-    if (!game) throw new HttpException(409, "Game doesn't exist");
-    
+    const game: Game = await this.getGameByJoinCode(joinCode);
+  
     const question: Question = await this.questions.findOne({index: game.currentQuestion});
 
     return question;
   }
 
   // Move to the next question
-  public async nextQuestion(gameID: string): Promise<Game>
+  public async nextQuestion(joinCode: string): Promise<Game>
   {
-    if (isEmpty(gameID)) throw new HttpException(400, "game is empty");
-    
-    const game: Game = await this.getGameByID(gameID);
-    if (!game) throw new HttpException(409, "Game doesn't exist");
+    const game: Game = await this.getGameByJoinCode(joinCode);
     
     var nextQuestion = game.currentQuestion + 1;
 
@@ -147,7 +145,7 @@ class GameService {
       nextQuestion = 0;
     }
 
-    const updatedGame: Game = await this.games.findByIdAndUpdate(gameID, { currentQuestion: nextQuestion });
+    const updatedGame: Game = await this.games.findByIdAndUpdate(game._id, { currentQuestion: nextQuestion });
 
     return updatedGame;
   }
