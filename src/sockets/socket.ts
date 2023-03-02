@@ -26,12 +26,11 @@ export function initializeSocket(app: Application) {
     });
 
     socket.on('join-game-room', async ({ gameCode, playerName }: JoinGameRoomPayload) => {
-      console.log('Join game room!');
       if (!!gameCode) {
         console.log(`Joined room ${gameCode}. ${playerName}`);
         socket.join(gameCode);
         socket.data['playerName'] = playerName;
-        
+
         const hostRoom = getHostRoom(gameCode);
         const gameService = getGameService();
         const players = await gameService.getActivePlayers(gameCode);
