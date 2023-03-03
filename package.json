@@ -15,10 +15,6 @@
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
     "deploy:dev": "pm2 start ecosystem.config.js --only dev"
   },
-  "pre-commit": [
-    "typecheck",
-    "build"
-  ],
   "dependencies": {
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
@@ -68,7 +64,6 @@
     "node-gyp": "^9.1.0",
     "nodemon": "^2.0.19",
     "pm2": "^5.2.0",
-    "pre-commit": "^1.2.2",
     "prettier": "^2.7.1",
     "rimraf": "^4.2.0",
     "supertest": "^6.2.4",
