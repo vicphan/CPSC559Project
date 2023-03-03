@@ -1,4 +1,4 @@
-import { getGameService } from '@/services/game.service';
+import { getGameService } from '../services/game.service';
 import { Application } from 'express';
 import { Socket, Server } from 'socket.io';
 
@@ -26,12 +26,11 @@ export function initializeSocket(app: Application) {
     });
 
     socket.on('join-game-room', async ({ gameCode, playerName }: JoinGameRoomPayload) => {
-      console.log('Join game room!');
       if (!!gameCode) {
         console.log(`Joined room ${gameCode}. ${playerName}`);
         socket.join(gameCode);
         socket.data['playerName'] = playerName;
-        
+
         const hostRoom = getHostRoom(gameCode);
         const gameService = getGameService();
         const players = await gameService.getActivePlayers(gameCode);
@@ -41,7 +40,7 @@ export function initializeSocket(app: Application) {
 
     socket.on('join-game-room-as-host', (code?: string) => {
       if (!!code) {
-        console.log(`Host joined room ${code}`);
+        // console.log(`Host joined room ${code}`);
         socket.join(code);
       }
     });

@@ -1,5 +1,5 @@
 import { model, Schema, Document } from 'mongoose';
-import { Game } from '@interfaces/games.interface';
+import { Game } from '../interfaces/games.interface';
 
 const gameSchema: Schema = new Schema({
   joinCode: {

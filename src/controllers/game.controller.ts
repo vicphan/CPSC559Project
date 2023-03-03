@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { Game } from '@interfaces/games.interface';
-import { getGameService } from '@/services/game.service';
-import { Question } from '@/interfaces/questions.interface';
+import { Game } from '../interfaces/games.interface';
+import { getGameService } from '../services/game.service';
+import { Question } from '../interfaces/questions.interface';
 
 class GamesController {
   public gameService = getGameService();
@@ -87,7 +87,6 @@ class GamesController {
       next(error);
     }
   };
-
 
   // gets a game by its game ID
   public getGameByID = async (req: Request, res: Response, next: NextFunction) => {

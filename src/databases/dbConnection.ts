@@ -1,4 +1,4 @@
-import { MONGO_URI } from '@config';
+import { MONGO_URI } from '../config';
 
 export const dbConnection = {
   url: MONGO_URI,
