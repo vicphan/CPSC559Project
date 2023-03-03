@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import GameController from '@controllers/game.controller';
-import { Routes } from '@interfaces/routes.interface';
+import GameController from '../controllers/game.controller';
+import { Routes } from '../interfaces/routes.interface';
 
 class GamesRoute implements Routes {
   public path = '/games';

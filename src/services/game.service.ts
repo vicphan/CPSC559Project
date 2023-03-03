@@ -1,12 +1,12 @@
-import { HttpException } from '@exceptions/HttpException';
-import { Game } from '@interfaces/games.interface';
-import { Player } from '@interfaces/players.interface';
-import gameModel from '@models/game.model';
-import playerModel from '@models/player.model';
-import { isEmpty } from '@utils/util';
+import { HttpException } from '../exceptions/HttpException';
+import { Game } from '../interfaces/games.interface';
+import { Player } from '../interfaces/players.interface';
+import gameModel from '../models/game.model';
+import playerModel from '../models/player.model';
+import { isEmpty } from '../utils/util';
 import PlayerService from './player.service';
-import { Question } from '@/interfaces/questions.interface';
-import questionModel from '@/models/question.model';
+import { Question } from '../interfaces/questions.interface';
+import questionModel from '../models/question.model';
 
 class GameService {
   public games = gameModel;
@@ -22,51 +22,57 @@ class GameService {
   }
 
   // creates a randomized join code for a new game
-  public createJoinCode()
-  {
+  public createJoinCode() {
     return (Math.random() + 1).toString(36).substring(7);
   }
 
   // creates a new game with a new join code
   public async createGame(): Promise<Game> {
+    let joinCode = this.createJoinCode();
+    const findGame: Game = await this.games.findOne({ joinCode: joinCode });
 
-    var joinCode = this.createJoinCode();
-    const findGame: Game = await this.games.findOne({joinCode: joinCode})
-
-    while(findGame)
-    {
-      joinCode =  this.createJoinCode();
-      const findGame: Game = await this.games.findOne({joinCode: joinCode})
+    while (findGame) {
+      joinCode = this.createJoinCode();
+      const findGame: Game = await this.games.findOne({ joinCode: joinCode });
     }
 
-    var started = false;
-    let leaderboard: String[] = [];
-    var currentQuestion = 0;
-    const createGameData: Game = await this.games.create({ joinCode: joinCode, started: started, leaderboard: leaderboard, currentQuestion: currentQuestion });
+    const started = false;
+    const leaderboard: String[] = [];
+    const currentQuestion = 0;
+    const createGameData: Game = await this.games.create({
+      joinCode: joinCode,
+      started: started,
+      leaderboard: leaderboard,
+      currentQuestion: currentQuestion,
+    });
 
     return createGameData;
   }
 
-  // returns a game found by its game ID
+
   public async getGameByJoinCode(joinCode: string): Promise<Game>
   {
     if (isEmpty(joinCode)) throw new HttpException(400, "No game code given");
     const game: Game = await this.games.findOne({joinCode: joinCode});
     if (!game) throw new HttpException(409, "No such game with joinCode: " + joinCode);
     return game;
+   }
+
+  // returns a game found by its game ID
+  public async getGameByID(gameID: string): Promise<Game> {
+    const game: Game = await this.games.findById({ _id: gameID });
+
+    return game;
   }
 
   // get all the active players in the game
-  public async getActivePlayers(gameID: string)
-  {
-    const game: Game = await this.games.findById({_id: gameID});
+  public async getActivePlayers(gameID: string) {
+    const game: Game = await this.games.findById({ _id: gameID });
 
-    var playerList: Player[] = [];
-    var playerInGameCursor = this.players.find({game: gameID}).cursor();
-    for (let player: Player = await playerInGameCursor.next(); player != null; player = await playerInGameCursor.next()) 
-    {
-      if (player.active)
-      {
+    const playerList: Player[] = [];
+    const playerInGameCursor = this.players.find({ game: gameID }).cursor();
+    for (let player: Player = await playerInGameCursor.next(); player != null; player = await playerInGameCursor.next()) {
+      if (player.active) {
         playerList.push(player);
       }
     }
@@ -113,7 +119,7 @@ class GameService {
     const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (a.score > b.score) ? 1 : -1);
     
     // get updated leaderboard
-    let leaderboard: string[] = await this.updateLeaderboard(players);
+    const leaderboard: string[] = await this.updateLeaderboard(players);
 
     // update game's leaderboard
     const updateGameById: Game = await this.games.findByIdAndUpdate(game._id, { leaderboard: leaderboard });
@@ -139,9 +145,8 @@ class GameService {
     
     var nextQuestion = game.currentQuestion + 1;
 
-    const question: Question = await this.questions.findOne({index: nextQuestion});
-    if (!question)
-    {
+    const question: Question = await this.questions.findOne({ index: nextQuestion });
+    if (!question) {
       nextQuestion = 0;
     }
 
@@ -150,22 +155,27 @@ class GameService {
     return updatedGame;
   }
 
-  // updates the leader board with the players that have the top 10 scores 
+  // updates the leader board with the players that have the top 10 scores
   // if there are less than 10 players, the leaderboard contains all the players
-  public async updateLeaderboard(players: Player[]): Promise<string[]>
-  {
-    let leaderboard: string[] = []
+  public async updateLeaderboard(players: Player[]): Promise<string[]> {
+    const leaderboard: string[] = [];
 
-    let maxPlayers: number = 10;
+    let maxPlayers = 10;
     if (players.length < 10) {
       maxPlayers = players.length;
     }
-    for (let i = 0; i < maxPlayers; i++)
-    {
-      leaderboard.push(players[i].name + ":" + players[i].score.toString());
+    for (let i = 0; i < maxPlayers; i++) {
+      leaderboard.push(players[i].name + ':' + players[i].score.toString());
     }
-   return leaderboard;
+    return leaderboard;
   }
 }
 
-export default GameService;
+let gs;
+
+export function getGameService(): GameService {
+  if (!gs) {
+    gs = new GameService();
+  }
+  return gs;
+}

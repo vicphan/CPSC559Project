@@ -1,17 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
-import { Game } from '@interfaces/games.interface';
-import gameService from '@services/game.service';
-import { Question } from '@/interfaces/questions.interface';
+import { Game } from '../interfaces/games.interface';
+import { getGameService } from '../services/game.service';
+import { Question } from '../interfaces/questions.interface';
 
 class GamesController {
-  public gameService = new gameService();
+  public gameService = getGameService();
 
   // gets all running games
   public getGames = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const findAllGamesData: Game[] = await this.gameService.findAllGames();
 
-      res.status(200).json({ data: findAllGamesData, message: 'findAll' });
+      res.status(200).json(findAllGamesData);
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ class GamesController {
     try {
       const createGameData: Game = await this.gameService.createGame();
 
-      res.status(201).json({ data: createGameData, message: 'created' });
+      res.status(201).json(createGameData);
     } catch (error) {
       next(error);
     }
@@ -34,7 +34,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const updateGameData: Game = await this.gameService.startGame(joinCode);
 
-      res.status(200).json({ data: updateGameData, message: 'updated' });
+      res.status(200).json(updateGameData);
     } catch (error) {
       next(error);
     }
@@ -46,7 +46,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const endGameData: Game = await this.gameService.endGame(joinCode);
 
-      res.status(200).json({ data: endGameData, message: 'deleted' });
+      res.status(200).json(endGameData);
     } catch (error) {
       next(error);
     }
@@ -58,7 +58,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const updatedLeaderboardData: Game = await this.gameService.getLeaderboard(joinCode);
 
-      res.status(200).json({ data: updatedLeaderboardData, message: 'updated leaderboard' });
+      res.status(200).json(updatedLeaderboardData);
     } catch (error) {
       next(error);
     }
@@ -70,7 +70,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const question: Question = await this.gameService.getQuestion(joinCode);
 
-      res.status(200).json({ data: question, message: 'question' });
+      res.status(200).json(question);
     } catch (error) {
       next(error);
     }
@@ -82,12 +82,11 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const game: Game = await this.gameService.nextQuestion(joinCode);
 
-      res.status(200).json({ data: game, message: 'question' });
+      res.status(200).json(game);
     } catch (error) {
       next(error);
     }
   };
-
 
   // gets a game by its game ID
   public getGameByJoinCode = async (req: Request, res: Response, next: NextFunction) => {
@@ -100,7 +99,6 @@ class GamesController {
       next(error);
     }
   };
-
 }
 
 export default GamesController;

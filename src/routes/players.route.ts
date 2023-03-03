@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import PlayerController from '@controllers/player.controller';
-import { Routes } from '@interfaces/routes.interface';
-import validationMiddleware from '@middlewares/validation.middleware';
-import { CreatePlayerDto } from '@dtos/players.dto';
-import { SubmitQuestionDto } from '@/dtos/submitQuestion.dto';
+import PlayerController from '../controllers/player.controller';
+import { Routes } from '../interfaces/routes.interface';
+import validationMiddleware from '../middlewares/validation.middleware';
+import { CreatePlayerDto } from '../dtos/players.dto';
+import { SubmitQuestionDto } from '../dtos/submitQuestion.dto';
 
 class PlayersRoute implements Routes {
   public path = '/players';

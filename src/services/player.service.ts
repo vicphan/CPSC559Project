@@ -13,7 +13,6 @@ class PlayerService {
   public games = gameModel;
   public questions = questionModel;
 
-
   // returns all the players for all games
   public async findAllPlayers(): Promise<Player[]> {
     const players: Player[] = await this.players.find();
@@ -23,17 +22,17 @@ class PlayerService {
 
   // creates a new player when they join a game
   public async createPlayer(playerData: CreatePlayerDto): Promise<Player> {
-    if (isEmpty(playerData)) throw new HttpException(400, "playerData is empty");
+    if (isEmpty(playerData)) throw new HttpException(400, 'playerData is empty');
 
     const name = playerData.name;
-    
-    const game: Game = await this.games.findOne({joinCode: playerData.joinCode})
+
+    const game: Game = await this.games.findOne({ joinCode: playerData.joinCode });
     if (!game) throw new HttpException(404, `Game ${playerData.joinCode} could not be found`);
 
     const score = 0;
     const active = true;
 
-    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score, active: active  });
+    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score, active: active });
 
     return createdPlayerData;
   }
@@ -45,10 +44,9 @@ class PlayerService {
     const player: Player = await this.players.findOne({name: playerName});
     if (!player) throw new HttpException(404, `Player could not be found`);
 
-    var newPlayerScore = player.score;
+    let newPlayerScore = player.score;
 
-    if (questionData.correctAnswer)
-    {
+    if (questionData.correctAnswer) {
       newPlayerScore = newPlayerScore + 1;
     }
 
@@ -59,8 +57,8 @@ class PlayerService {
 
   // finds the players of the specified game
   public async findGamePlayers(gameID: Game): Promise<Player[]> {
-    const players: Player[] = await this.players.find({game: gameID});
-  
+    const players: Player[] = await this.players.find({ game: gameID });
+
     return players;
   }
 }
