@@ -9,10 +9,10 @@ import { connect, set } from 'mongoose';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from './config';
-import { dbConnection } from '@databases/dbConnection';
-import { Routes } from '@interfaces/routes.interface';
-import errorMiddleware from '@middlewares/error.middleware';
-import { logger, stream } from '@utils/logger';
+import { dbConnection } from './databases/dbConnection';
+import { Routes } from './interfaces/routes.interface';
+import errorMiddleware from './middlewares/error.middleware';
+import { logger, stream } from './utils/logger';
 import { initializeSocket } from './sockets/socket';
 
 class App {

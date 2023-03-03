@@ -1,6 +1,6 @@
 import { model, Schema, Document } from 'mongoose';
-import { Player } from '@interfaces/players.interface';
-const mongoose = require("mongoose");
+import { Player } from '../interfaces/players.interface';
+const mongoose = require('mongoose');
 
 const playerSchema: Schema = new Schema({
   name: {
@@ -9,7 +9,7 @@ const playerSchema: Schema = new Schema({
     unique: true,
   },
   game: {
-    type: mongoose.Schema.Types.ObjectId, 
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Game',
     required: true,
   },

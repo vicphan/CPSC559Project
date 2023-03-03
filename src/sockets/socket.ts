@@ -1,4 +1,4 @@
-import { getGameService } from '@/services/game.service';
+import { getGameService } from '../services/game.service';
 import { Application } from 'express';
 import { Socket, Server } from 'socket.io';
 

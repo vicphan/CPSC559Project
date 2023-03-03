@@ -8,7 +8,7 @@
   "types": "dist/server.d.ts",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "pre-prod": "rimraf dist && npm run build",
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
     "predev": "npm run build",

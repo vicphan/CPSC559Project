@@ -1,4 +1,4 @@
-import { Game } from '@interfaces/games.interface';
+import { Game } from '../interfaces/games.interface';
 
 export interface Player {
   _id: string;
