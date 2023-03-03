@@ -18,6 +18,7 @@ async function createQuestions() {
         prompt: questionList['questions'][i]['question'],
         correctAnswerIndex: questionList['questions'][i]['correctIndex'],
         answers: questionList['questions'][i]['answers'],
+        index: i,
       });
     }
   }

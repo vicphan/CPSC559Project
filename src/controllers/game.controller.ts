@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Game } from '@interfaces/games.interface';
 import { getGameService } from '@/services/game.service';
+import { Question } from '@/interfaces/questions.interface';
 
 class GamesController {
   public gameService = getGameService();
@@ -10,7 +11,7 @@ class GamesController {
     try {
       const findAllGamesData: Game[] = await this.gameService.findAllGames();
 
-      res.status(200).json({ data: findAllGamesData, message: 'findAll' });
+      res.status(200).json(findAllGamesData);
     } catch (error) {
       next(error);
     }
@@ -20,6 +21,7 @@ class GamesController {
   public createGame = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const createGameData: Game = await this.gameService.createGame();
+
       res.status(201).json(createGameData);
     } catch (error) {
       next(error);
@@ -32,7 +34,7 @@ class GamesController {
       const gameId: string = req.params.id;
       const updateGameData: Game = await this.gameService.startGame(gameId);
 
-      res.status(200).json({ data: updateGameData, message: 'updated' });
+      res.status(200).json(updateGameData);
     } catch (error) {
       next(error);
     }
@@ -44,7 +46,7 @@ class GamesController {
       const gameId: string = req.params.id;
       const endGameData: Game = await this.gameService.endGame(gameId);
 
-      res.status(200).json({ data: endGameData, message: 'deleted' });
+      res.status(200).json(endGameData);
     } catch (error) {
       next(error);
     }
@@ -56,11 +58,36 @@ class GamesController {
       const gameId: string = req.params.id;
       const updatedLeaderboardData: Game = await this.gameService.getLeaderboard(gameId);
 
-      res.status(200).json({ data: updatedLeaderboardData, message: 'updated leaderboard' });
+      res.status(200).json(updatedLeaderboardData);
     } catch (error) {
       next(error);
     }
   };
+
+  // gets the current question from the game
+  public getQuestion = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const gameId: string = req.params.id;
+      const question: Question = await this.gameService.getQuestion(gameId);
+
+      res.status(200).json(question);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // Change to the next question
+  public nextQuestion = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const gameId: string = req.params.id;
+      const game: Game = await this.gameService.nextQuestion(gameId);
+
+      res.status(200).json(game);
+    } catch (error) {
+      next(error);
+    }
+  };
+
 
   // gets a game by its game ID
   public getGameByID = async (req: Request, res: Response, next: NextFunction) => {
@@ -68,7 +95,7 @@ class GamesController {
       const gameId: string = req.params.id;
       const game: Game = await this.gameService.getGameByID(gameId);
 
-      res.status(200).json({ data: game, message: 'got game with id ' + gameId });
+      res.status(200).json(game);
     } catch (error) {
       next(error);
     }
