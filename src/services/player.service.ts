@@ -1,13 +1,12 @@
-import { HttpException } from '../exceptions/HttpException';
-import { Player } from '../interfaces/players.interface';
-import { Game } from '../interfaces/games.interface';
-import playerModel from '../models/player.model';
-import { isEmpty } from '../utils/util';
-import gameModel from '../models/game.model';
-import { CreatePlayerDto } from '../dtos/players.dto';
-import { SubmitQuestionDto } from '../dtos/submitQuestion.dto';
-import { Question } from '../interfaces/questions.interface';
-import questionModel from '../models/question.model';
+import { HttpException } from '@exceptions/HttpException';
+import { Player } from '@interfaces/players.interface';
+import { Game } from '@interfaces/games.interface';
+import playerModel from '@models/player.model';
+import { isEmpty } from '@utils/util';
+import gameModel from '@/models/game.model';
+import { CreatePlayerDto } from '@dtos/players.dto';
+import { SubmitQuestionDto } from '@/dtos/submitQuestion.dto';
+import questionModel from '@models/question.model';
 
 class PlayerService {
   public players = playerModel;
@@ -39,10 +38,10 @@ class PlayerService {
   }
 
   // Update the players score
-  public async submitAnswer(playerId: string, questionData: SubmitQuestionDto): Promise<Player> {
-    if (isEmpty(questionData)) throw new HttpException(400, 'questionData is empty');
-
-    const player: Player = await this.players.findOne({ _id: playerId });
+  public async submitAnswer(playerName: string, questionData: SubmitQuestionDto): Promise<Player> {
+    if (isEmpty(questionData)) throw new HttpException(400, "questionData is empty");
+    
+    const player: Player = await this.players.findOne({name: playerName});
     if (!player) throw new HttpException(404, `Player could not be found`);
 
     let newPlayerScore = player.score;
@@ -51,7 +50,7 @@ class PlayerService {
       newPlayerScore = newPlayerScore + 1;
     }
 
-    const updatedPlayer: Player = await this.players.findByIdAndUpdate(playerId, { score: newPlayerScore });
+    const updatedPlayer: Player = await this.players.findByIdAndUpdate(player._id, { score: newPlayerScore });
 
     return updatedPlayer;
   }
