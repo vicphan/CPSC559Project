@@ -77,39 +77,21 @@ class GameService {
 
   // starts a game when players are ready
   public async startGame(joinCode: string): Promise<Game> {
-<<<<<<< HEAD
     const started = true;
 
     const updateGameById: Game = await this.games.findOneAndUpdate({ joinCode: joinCode }, { started: started });
-=======
-    
-    const game: Game = await this.getGameByJoinCode(joinCode);
-
-    const started = true;
-
-    const updateGameById: Game = await this.games.findByIdAndUpdate(game._id, { started: started });
->>>>>>> 3bbc826cd9504eb4c79200e80d3a65ef4c1b5886
     if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
 
     return updateGameById;
   }
 
   // ends the game when the host decides to or all questions have been answered
-<<<<<<< HEAD
-  public async endGame(gameId: string): Promise<Game> {
-    let deletedPlayer: Player = await this.players.findOneAndDelete({ game: gameId });
-    while (deletedPlayer) {
-      deletedPlayer = await this.players.findOneAndDelete({ game: gameId });
-=======
   public async endGame(joinCode: string): Promise<Game> {
-
     const game: Game = await this.getGameByJoinCode(joinCode);
 
-    var deletedPlayer: Player = await this.players.findOneAndDelete({game: game._id});
-    while (deletedPlayer) 
-    {
-      deletedPlayer = await this.players.findOneAndDelete({game: game._id});
->>>>>>> 3bbc826cd9504eb4c79200e80d3a65ef4c1b5886
+    let deletedPlayer: Player = await this.players.findOneAndDelete({ game: game._id });
+    while (deletedPlayer) {
+      deletedPlayer = await this.players.findOneAndDelete({ game: game._id });
     }
 
     const updateGameById: Game = await this.games.findByIdAndDelete(game._id);
@@ -119,24 +101,12 @@ class GameService {
   }
 
   // returns game with updated leaderboard
-<<<<<<< HEAD
-  public async getLeaderboard(gameID: string): Promise<Game> {
-    if (isEmpty(gameID)) throw new HttpException(400, 'game is empty');
-
-    const playerGame: Game = await this.getGameByID(gameID);
-
-    // find all players
-    const players: Player[] = (await this.playerService.findGamePlayers(playerGame)).sort((a, b) => (a.score > b.score ? 1 : -1));
-
-=======
-  public async getLeaderboard(joinCode: string): Promise<Game>
-  {
+  public async getLeaderboard(joinCode: string): Promise<Game> {
     const game: Game = await this.getGameByJoinCode(joinCode);
-    
+
     // find all players
-    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (a.score > b.score) ? 1 : -1);
-    
->>>>>>> 3bbc826cd9504eb4c79200e80d3a65ef4c1b5886
+    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (a.score > b.score ? 1 : -1));
+
     // get updated leaderboard
     const leaderboard: string[] = await this.updateLeaderboard(players);
 
@@ -148,43 +118,20 @@ class GameService {
   }
 
   // returns current question for game with ID
-<<<<<<< HEAD
-  public async getQuestion(gameID: string): Promise<Question> {
-    if (isEmpty(gameID)) throw new HttpException(400, 'game is empty');
-
-    const game: Game = await this.getGameByID(gameID);
-    if (!game) throw new HttpException(409, "Game doesn't exist");
+  public async getQuestion(joinCode: string): Promise<Question> {
+    const game: Game = await this.getGameByJoinCode(joinCode);
 
     const question: Question = await this.questions.findOne({ index: game.currentQuestion });
-=======
-  public async getQuestion(joinCode: string): Promise<Question>
-  {
-    const game: Game = await this.getGameByJoinCode(joinCode);
-  
-    const question: Question = await this.questions.findOne({index: game.currentQuestion});
->>>>>>> 3bbc826cd9504eb4c79200e80d3a65ef4c1b5886
 
     return question;
   }
 
   // Move to the next question
-<<<<<<< HEAD
-  public async nextQuestion(gameID: string): Promise<Game> {
-    if (isEmpty(gameID)) throw new HttpException(400, 'game is empty');
-
-    const game: Game = await this.getGameByID(gameID);
-    if (!game) throw new HttpException(409, "Game doesn't exist");
+  public async nextQuestion(joinCode: string): Promise<Game> {
+    const game: Game = await this.getGameByJoinCode(joinCode);
 
     let nextQuestion = game.currentQuestion + 1;
 
-=======
-  public async nextQuestion(joinCode: string): Promise<Game>
-  {
-    const game: Game = await this.getGameByJoinCode(joinCode);
-    
-    var nextQuestion = game.currentQuestion + 1;
-
->>>>>>> 3bbc826cd9504eb4c79200e80d3a65ef4c1b5886
     const question: Question = await this.questions.findOne({ index: nextQuestion });
     if (!question) {
       nextQuestion = 0;
