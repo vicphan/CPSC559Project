@@ -82,7 +82,8 @@ class GameService {
     const updateGameById: Game = await this.games.findOneAndUpdate({ joinCode: joinCode }, { started: started });
     if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
 
-    return updateGameById;
+    const updated: Game = await this.games.findById(updateGameById._id);
+    return updated;
   }
 
   // ends the game when the host decides to or all questions have been answered
