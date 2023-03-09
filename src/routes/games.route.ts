@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import GameController from '@controllers/game.controller';
-import { Routes } from '@interfaces/routes.interface';
+import GameController from '../controllers/game.controller';
+import { Routes } from '../interfaces/routes.interface';
 
 class GamesRoute implements Routes {
   public path = '/games';
@@ -13,13 +13,13 @@ class GamesRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.gamesController.getGames);
-    this.router.get(`${this.path}/:id`, this.gamesController.getGameByID);
-    this.router.get(`${this.path}/leaderboard/:id`, this.gamesController.getLeaderboard);
-    this.router.get(`${this.path}/question/:id`, this.gamesController.getQuestion);
-    this.router.put(`${this.path}/question/:id`, this.gamesController.nextQuestion);
+    this.router.get(`${this.path}/:joinCode`, this.gamesController.getGameByJoinCode);
+    this.router.get(`${this.path}/leaderboard/:joinCode`, this.gamesController.getLeaderboard);
+    this.router.get(`${this.path}/question/:joinCode`, this.gamesController.getQuestion);
+    this.router.put(`${this.path}/question/:joinCode`, this.gamesController.nextQuestion);
     this.router.post(`${this.path}`, this.gamesController.createGame);
-    this.router.put(`${this.path}/:id`, this.gamesController.startGame);
-    this.router.delete(`${this.path}/:id`, this.gamesController.endGame);
+    this.router.put(`${this.path}/:joinCode`, this.gamesController.startGame);
+    this.router.delete(`${this.path}/:joinCode`, this.gamesController.endGame);
   }
 }
 

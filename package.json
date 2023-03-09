@@ -4,15 +4,23 @@
   "description": "TypeScript + Mongoose + MongoDB + Express API Server",
   "author": "",
   "license": "ISC",
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
   "scripts": {
-    "start": "npm run build && cross-env NODE_ENV=production node build/server.js",
-    "dev": "cross-env NODE_ENV=development nodemon",
+    "prebuild": "rimraf dist",
     "build": "tsc && tsc-alias",
-    "test": "jest --forceExit --detectOpenHandles",
-    "lint": "eslint --ignore-path .gitignore --ext .ts src/",
-    "lint:fix": "npm run lint -- --fix",
-    "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
-    "deploy:dev": "pm2 start ecosystem.config.js --only dev"
+    "pre-prod": "rimraf dist && npm run build",
+    "dev": "nodemon --watch src --exec ts-node src/server.ts",
+    "predev": "npm run build",
+    "prepare:enviroment": "node scripts/dev-enviroment.cjs",
+    "format": "prettier --write \"src/**/*.(js|ts)\"",
+    "lint": "eslint src --ext .js,.ts",
+    "lint:fix": "eslint src --fix --ext .js,.ts",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -64,10 +72,11 @@
     "nodemon": "^2.0.19",
     "pm2": "^5.2.0",
     "prettier": "^2.7.1",
+    "rimraf": "^4.2.0",
     "supertest": "^6.2.4",
     "ts-jest": "^28.0.7",
     "ts-node": "^10.9.1",
-    "tsc-alias": "^1.7.0",
+    "tsc-alias": "^1.8.2",
     "tsconfig-paths": "^4.0.0",
     "typescript": "^4.7.4"
   }
