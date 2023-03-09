@@ -31,8 +31,8 @@ class GamesController {
   // starts the specified game
   public startGame = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const gameId: string = req.params.id;
-      const updateGameData: Game = await this.gameService.startGame(gameId);
+      const joinGameCode: string = req.params.id;
+      const updateGameData: Game = await this.gameService.startGame(joinGameCode);
 
       res.status(200).json(updateGameData);
     } catch (error) {
@@ -87,7 +87,6 @@ class GamesController {
       next(error);
     }
   };
-
 
   // gets a game by its game ID
   public getGameByID = async (req: Request, res: Response, next: NextFunction) => {
