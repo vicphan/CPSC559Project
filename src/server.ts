@@ -7,7 +7,7 @@ import App from './app';
 import { createQuestions } from './createQuestions';
 
 // validateEnv();
-createQuestions();
+// createQuestions();
 const app = new App([new IndexRoute(), new UsersRoute(), new AuthRoute(), new GamesRoute(), new PlayersRoute()]);
 
 app.listen();
