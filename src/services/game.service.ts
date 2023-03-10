@@ -106,7 +106,7 @@ class GameService {
     const game: Game = await this.getGameByJoinCode(joinCode);
 
     // find all players
-    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (a.score > b.score ? 1 : -1));
+    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (a.totalScore > b.totalScore ? 1 : -1));
 
     // get updated leaderboard
     const leaderboard: string[] = await this.updateLeaderboard(players);
@@ -153,7 +153,7 @@ class GameService {
       maxPlayers = players.length;
     }
     for (let i = 0; i < maxPlayers; i++) {
-      leaderboard.push(players[i].name + ':' + players[i].score.toString());
+      leaderboard.push(players[i].name + ':' + players[i].totalScore.toString());
     }
     return leaderboard;
   }

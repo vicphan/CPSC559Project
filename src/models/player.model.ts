@@ -13,6 +13,9 @@ const playerSchema: Schema = new Schema({
     ref: 'Game',
     required: true,
   },
+  totalScore: {
+    type: Number,
+  },
   scores: [{
     type: Number,
   }],

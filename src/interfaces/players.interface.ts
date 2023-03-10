@@ -3,7 +3,8 @@ import { Game } from '../interfaces/games.interface';
 export interface Player {
   _id: string;
   name: string;
-  score: number;
+  totalScore: number;
+  scores: number[];
   game: Game;
   active: Boolean;
 }
