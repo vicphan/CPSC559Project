@@ -143,6 +143,10 @@ class GameService {
     return updatedGame;
   }
 
+  public async deleteQuestions(): Promise<void> {
+    await this.questions.deleteMany({});
+  }
+
   // updates the leader board with the players that have the top 10 scores
   // if there are less than 10 players, the leaderboard contains all the players
   public async updateLeaderboard(players: Player[]): Promise<string[]> {
