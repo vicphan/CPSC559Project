@@ -91,7 +91,7 @@ class App {
   }
 
   private initializeSockets() {
-    // initializeSocket(this.app);
+    initializeSocket(this.app);
   }
 }
 
