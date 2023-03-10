@@ -45,10 +45,15 @@ class PlayerService {
     const player: Player = await this.players.findOne({name: playerName});
     if (!player) throw new HttpException(404, `Player could not be found`);
 
+    const game: Game = await this.games.findById({ _id: player.game });
+    if (!game) throw new HttpException(404, `Player game could not be found`);
+
     let newPlayerScores = player.scores;
 
+    console.log(game.currentQuestion);
+
     if (questionData.correctAnswer) {
-      newPlayerScores[questionData.questionIndex] = 1;
+      newPlayerScores[game.currentQuestion] = 1;
     }
 
     let newTotalScore =0;
