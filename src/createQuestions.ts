@@ -1,7 +1,7 @@
-import { getGameService } from '../services/game.service';
+import { getGameService } from './services/game.service';
 import { readFileSync } from 'fs';
-import questionModel from '../models/question.model';
-import { logger } from './logger';
+import questionModel from './models/question.model';
+import { logger } from './utils/logger';
 
 export async function createQuestions() {
   logger.info('Deleting existing questions and creating new ones from questions json..');

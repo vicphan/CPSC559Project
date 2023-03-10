@@ -4,7 +4,7 @@ import UsersRoute from './routes/users.route';
 import GamesRoute from './routes/games.route';
 import PlayersRoute from './routes/players.route';
 import App from './app';
-import { createQuestions } from './utils/createQuestions';
+import { createQuestions } from './createQuestions';
 
 // validateEnv();
 createQuestions();
