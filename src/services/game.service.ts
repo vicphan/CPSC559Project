@@ -127,6 +127,10 @@ class GameService {
     return question;
   }
 
+  public async deleteQuestions(): Promise<void> {
+    await this.questions.deleteMany();
+  }
+
   // Move to the next question
   public async nextQuestion(joinCode: string): Promise<Game> {
     const game: Game = await this.getGameByJoinCode(joinCode);
