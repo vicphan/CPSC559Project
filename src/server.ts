@@ -10,6 +10,6 @@ import { createQuestions } from './createQuestions';
 // validateEnv();
 // createQuestions();
 const app = new App([new IndexRoute(), new UsersRoute(), new AuthRoute(), new GamesRoute(), new PlayersRoute()]);
-createQuestions();
+// createQuestions();
 
 app.listen();
