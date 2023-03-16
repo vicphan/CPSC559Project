@@ -192,11 +192,18 @@ class GameService {
       {
         player = await this.createPlayer(playerNames[i], game);
       }
+
+      //Take the highest score if there is a difference
+      var score = syncData.playerScores[playerNames[i]];
+      if (player.scores[i] == null || player.scores[i] < score)
+      {
+        this.updatePlayerScore(player, syncData.questionIndex, score);
+      }
     }
 
     if (different)
     {
-      //Send sync message to other servers
+      //TODO: Send sync message to other servers
     }
 
     return game;
@@ -206,6 +213,23 @@ class GameService {
   {
     var newPlayer: Player = await this.players.create({ name: playerName, game: game, scores: [], active: true, totalScore: 0 });
     return newPlayer;
+  }
+
+  public async updatePlayerScore(player, questionIndex, score)
+  {
+    let newPlayerScores = player.scores;
+
+    newPlayerScores[questionIndex] = score;
+
+    let newTotalScore =0;
+    for (let i = 0; i < newPlayerScores.length; i++)
+    {
+      if (newPlayerScores[i] != null){
+        newTotalScore += newPlayerScores[i];
+      }
+    }
+
+    await this.players.findByIdAndUpdate(player._id, { scores: newPlayerScores, totalScore: newTotalScore });
   }
 }
 
