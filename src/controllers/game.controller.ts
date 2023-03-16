@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Game } from '../interfaces/games.interface';
 import { getGameService } from '../services/game.service';
 import { Question } from '../interfaces/questions.interface';
+import { SyncGameDto } from '../dtos/syncGame.dto';
 
 class GamesController {
   public gameService = getGameService();
@@ -95,6 +96,19 @@ class GamesController {
       const game: Game = await this.gameService.getGameByJoinCode(joinCode);
 
       res.status(200).json(game);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // Sync the game
+  public syncGame = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const joinCode: string = req.params.joinCode;
+      const gameData: SyncGameDto = req.body;
+      this.gameService.syncGame(joinCode, gameData);
+
+      res.status(200).json();
     } catch (error) {
       next(error);
     }

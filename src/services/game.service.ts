@@ -7,6 +7,7 @@ import { isEmpty } from '../utils/util';
 import PlayerService from './player.service';
 import { Question } from '../interfaces/questions.interface';
 import questionModel from '../models/question.model';
+import { SyncGameDto } from '@/dtos/syncGame.dto';
 
 class GameService {
   public games = gameModel;
@@ -157,6 +158,13 @@ class GameService {
     }
     return leaderboard;
   }
+
+  // Sync the game with what other servers are doing
+  public async syncGame(joinCode: string, gameData: SyncGameDto)
+  {
+    const game: Game = await this.getGameByJoinCode(joinCode);
+  }
+
 }
 
 let gs;
