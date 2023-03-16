@@ -37,6 +37,8 @@ class GameService {
       currentQuestion: currentQuestion,
     });
 
+    //TODO: Send out sync message with game joinCode and -1 for question
+
     return createGameData;
   }
 
@@ -74,6 +76,9 @@ class GameService {
     if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
 
     const updated: Game = await this.games.findById(updateGameById._id);
+    
+     //TODO: Send out sync message with game joinCode and -1 for question
+
     return updated;
   }
 
@@ -131,6 +136,8 @@ class GameService {
 
     const updatedGame: Game = await this.games.findByIdAndUpdate(game._id, { currentQuestion: nextQuestion });
 
+     //TODO: Send out sync message with game joinCode and next index for question
+
     return updatedGame;
   }
 
@@ -154,9 +161,23 @@ class GameService {
   }
 
   // Sync the game with what other servers are doing
+  // If question index is -1 only check that game exists and players match
   public async syncGame(joinCode: string, gameData: SyncGameDto)
   {
-    const game: Game = await this.getGameByJoinCode(joinCode);
+    var changed = false;
+    var game: Game = await this.getGameByJoinCode(joinCode);
+
+    //If the game doesnt exist yet create it
+    if (isEmpty(game))
+    {
+      game = await this.createGame(joinCode)
+      changed = true
+    }
+
+    if (changed)
+    {
+      //Send sync message to other servers
+    }
   }
 
 }
