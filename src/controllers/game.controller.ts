@@ -20,7 +20,8 @@ class GamesController {
   // creates a new game
   public createGame = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const createGameData: Game = await this.gameService.createGame();
+      const joinCode: string = req.params.joinCode;
+      const createGameData: Game = await this.gameService.createGame(joinCode);
 
       res.status(201).json(createGameData);
     } catch (error) {

@@ -21,20 +21,9 @@ class GameService {
     return games;
   }
 
-  // creates a randomized join code for a new game
-  public createJoinCode() {
-    return (Math.random() + 1).toString(36).substring(7);
-  }
-
-  // creates a new game with a new join code
-  public async createGame(): Promise<Game> {
-    let joinCode = this.createJoinCode();
+  // creates a new game with a join code from the frontend
+  public async createGame(joinCode: string): Promise<Game> {
     const findGame: Game = await this.games.findOne({ joinCode: joinCode });
-
-    while (findGame) {
-      joinCode = this.createJoinCode();
-      const findGame: Game = await this.games.findOne({ joinCode: joinCode });
-    }
 
     const started = false;
     const leaderboard: String[] = [];
