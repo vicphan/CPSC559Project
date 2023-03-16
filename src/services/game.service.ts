@@ -24,7 +24,7 @@ class GameService {
   // creates a new game with a join code from the frontend
   public async createGame(joinCode: string): Promise<Game> {
     const existingGame: Game = await this.games.findOne({ joinCode: joinCode });
-    if (existingGame) throw new HttpException(400, 'Game with joinCode already exists');
+    if (existingGame) throw new HttpException(466, 'Game with joinCode already exists');
 
     const started = false;
     const leaderboard: String[] = [];
