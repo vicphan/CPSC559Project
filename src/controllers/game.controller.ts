@@ -106,10 +106,10 @@ class GamesController {
   public syncGame = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const joinCode: string = req.params.joinCode;
-      const gameData: SyncGameDto = req.body;
-      this.gameService.syncGame(joinCode, gameData);
+      const syncData: SyncGameDto = req.body;
+      const syncedGame: Game = await this.gameService.syncGame(joinCode, syncData);
 
-      res.status(200).json();
+      res.status(200).json(syncedGame);
     } catch (error) {
       next(error);
     }

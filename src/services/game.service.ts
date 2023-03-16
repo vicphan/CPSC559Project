@@ -162,22 +162,31 @@ class GameService {
 
   // Sync the game with what other servers are doing
   // If question index is -1 only check that game exists and players match
-  public async syncGame(joinCode: string, gameData: SyncGameDto)
+  public async syncGame(joinCode: string, syncData: SyncGameDto) : Promise<Game>
   {
-    var changed = false;
+    var different = false;
     var game: Game = await this.getGameByJoinCode(joinCode);
 
     //If the game doesnt exist yet create it
     if (isEmpty(game))
     {
       game = await this.createGame(joinCode)
-      changed = true
+      different = true
     }
 
-    if (changed)
+    //If sync is for the current question you missed the question update
+    if (game.currentQuestion == syncData.questionIndex)
+    {
+      game = await this.nextQuestion(joinCode)
+      different = true
+    }
+
+    if (different)
     {
       //Send sync message to other servers
     }
+
+    return game
   }
 
 }
