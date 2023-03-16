@@ -198,9 +198,11 @@ class GameService {
       if (player.scores[i] == null || player.scores[i] < score)
       {
         this.updatePlayerScore(player, syncData.questionIndex, score);
+        different = true;
       }
     }
 
+    //If sync resulted in a change send out sync message as others may have missed changes too 
     if (different)
     {
       //TODO: Send sync message to other servers
