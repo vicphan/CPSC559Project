@@ -170,15 +170,28 @@ class GameService {
     //If the game doesnt exist yet create it
     if (isEmpty(game))
     {
-      game = await this.createGame(joinCode)
-      different = true
+      game = await this.createGame(joinCode);
+      different = true;
     }
 
     //If sync is for the current question you missed the question update
     if (game.currentQuestion == syncData.questionIndex)
     {
-      game = await this.nextQuestion(joinCode)
-      different = true
+      game = await this.nextQuestion(joinCode);
+      different = true;
+    }
+
+    //Loop through every player in the sync message
+    var playerNames = Object.keys(syncData.playerScores);
+    for (let i = 0; i < playerNames.length; i++)
+    {
+      var player: Player = await this.players.findOne({name: playerNames[i]});
+      
+      //If player doesn't exist in this game create them
+      if (isEmpty(player))
+      {
+        player = await this.createPlayer(playerNames[i], game);
+      }
     }
 
     if (different)
@@ -186,9 +199,14 @@ class GameService {
       //Send sync message to other servers
     }
 
-    return game
+    return game;
   }
 
+  public async createPlayer(playerName, game): Promise<Player>
+  {
+    var newPlayer: Player = await this.players.create({ name: playerName, game: game, scores: [], active: true, totalScore: 0 });
+    return newPlayer;
+  }
 }
 
 let gs;
