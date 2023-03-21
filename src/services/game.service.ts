@@ -37,7 +37,7 @@ class GameService {
       currentQuestion: currentQuestion,
     });
 
-    //TODO: Send out sync message with game joinCode and -1 for question
+    this.sendSyncMessages(createGameData, -1);
 
     return createGameData;
   }
@@ -77,7 +77,7 @@ class GameService {
 
     const updated: Game = await this.games.findById(updateGameById._id);
     
-     //TODO: Send out sync message with game joinCode and -1 for question
+    this.sendSyncMessages(updated, -1);
 
     return updated;
   }
@@ -136,7 +136,7 @@ class GameService {
 
     const updatedGame: Game = await this.games.findByIdAndUpdate(game._id, { currentQuestion: nextQuestion });
 
-     //TODO: Send out sync message with game joinCode and next index for question
+    this.sendSyncMessages(updatedGame, nextQuestion-1);
 
     return updatedGame;
   }
@@ -205,10 +205,20 @@ class GameService {
     //If sync resulted in a change send out sync message as others may have missed changes too 
     if (different)
     {
-      //TODO: Send sync message to other servers
+      this.sendSyncMessages(game, syncData.questionIndex);
     }
 
     return game;
+  }
+
+  public async sendSyncMessages(game, questionIndex)
+  {
+    console.time('Time');
+    const fs = require('fs');
+    const allContents = fs.readFileSync('serverList.txt', 'utf-8');
+    allContents.split(/\r?\n/).forEach((line) => {
+      console.log(line)
+    });
   }
 
   public async createPlayer(playerName, game): Promise<Player>
