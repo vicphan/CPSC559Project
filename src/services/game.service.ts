@@ -14,6 +14,7 @@ class GameService {
   public players = playerModel;
   public playerService = new PlayerService();
   public questions = questionModel;
+  public axios = require('axios');
 
   // returns all the games running
   public async findAllGames(): Promise<Game[]> {
@@ -213,12 +214,25 @@ class GameService {
 
   public async sendSyncMessages(game, questionIndex)
   {
-    console.time('Time');
     const fs = require('fs');
-    const allContents = fs.readFileSync('serverList.txt', 'utf-8');
-    allContents.split(/\r?\n/).forEach((line) => {
-      console.log(line)
+    const allServers = fs.readFileSync('serverList.txt', 'utf-8');
+    allServers.split(/\r?\n/).forEach((server) => {
+      this.sendSyncMessage(game, questionIndex, server);
     });
+  }
+
+  public sendSyncMessage(game, questionIndex, server)
+  {
+    const options = {
+      method: 'PUT',
+      url: server + '/games/sync/' + game.joinCode
+    };
+    
+    this.axios
+      .request(options)
+      .catch(function (error: any) {
+        console.error(error);
+      });
   }
 
   public async createPlayer(playerName, game): Promise<Player>
