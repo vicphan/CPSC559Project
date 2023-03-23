@@ -8,6 +8,7 @@ import PlayerService from './player.service';
 import { Question } from '../interfaces/questions.interface';
 import questionModel from '../models/question.model';
 import { SyncGameDto } from '@/dtos/syncGame.dto';
+import { URL } from '../config';
 
 class GameService {
   public games = gameModel;
@@ -217,7 +218,9 @@ class GameService {
     const fs = require('fs');
     const allServers = fs.readFileSync('serverList.txt', 'utf-8');
     allServers.split(/\r?\n/).forEach((server) => {
-      this.sendSyncMessage(game, questionIndex, server);
+      if (server != URL){
+        this.sendSyncMessage(game, questionIndex, server);
+      }
     });
   }
 
