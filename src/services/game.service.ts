@@ -224,18 +224,31 @@ class GameService {
     });
   }
 
-  public sendSyncMessage(game, questionIndex, server)
+  public async sendSyncMessage(game, questionIndex, server)
   {
-    const options = {
-      method: 'PUT',
-      url: server + '/games/sync/' + game.joinCode
-    };
+    const url = server + '/games/sync/' + game.joinCode;
+    const playerScores = await this.getPlayerScoresForQuestion(questionIndex, game._id)
+    const data = {questionIndex: questionIndex,
+                  playerScores: playerScores};
+    var res = this.axios.put(url, data).catch(err => {
+      console.log(err, err.response)
+  });
+    console.log(res);
+  }
+
+  public async getPlayerScoresForQuestion(questionIndex, gameId)
+  {
+    if (questionIndex == -1)
+      return {};
     
-    this.axios
-      .request(options)
-      .catch(function (error: any) {
-        console.error(error);
-      });
+    var playerScoreList = {};
+    
+    const playerInGameCursor = this.players.find({ game: gameId }).cursor();
+    for (let player: Player = await playerInGameCursor.next(); player != null; player = await playerInGameCursor.next()) {
+      playerScoreList[player.name] = player.scores[questionIndex];
+    }
+
+    return playerScoreList;
   }
 
   public async createPlayer(playerName, game): Promise<Player>
