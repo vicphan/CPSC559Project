@@ -16,6 +16,7 @@ class GamesRoute implements Routes {
     this.router.get(`${this.path}/:joinCode`, this.gamesController.getGameByJoinCode);
     this.router.get(`${this.path}/leaderboard/:joinCode`, this.gamesController.getLeaderboard);
     this.router.get(`${this.path}/question/:joinCode`, this.gamesController.getQuestion);
+    this.router.get(`${this.path}/players/:joinCode`, this.gamesController.getPlayersInGame);
     this.router.put(`${this.path}/question/:joinCode`, this.gamesController.nextQuestion);
     this.router.post(`${this.path}/:joinCode`, this.gamesController.createGame);
     this.router.put(`${this.path}/:joinCode`, this.gamesController.startGame);
