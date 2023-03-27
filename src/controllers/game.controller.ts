@@ -113,6 +113,16 @@ class GamesController {
       next(error);
     }
   };
+
+  // Clear all
+  public clearAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await this.gameService.clearAll();
+      res.status(200).json();
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default GamesController;

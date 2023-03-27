@@ -144,6 +144,12 @@ class GameService {
     }
     return leaderboard;
   }
+
+  public async clearAll() {
+    await this.questions.deleteMany({});
+    await this.players.deleteMany({});
+    await this.games.deleteMany({});
+  }
 }
 
 let gs;
