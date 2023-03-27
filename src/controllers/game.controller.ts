@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Game } from '../interfaces/games.interface';
 import { getGameService } from '../services/game.service';
 import { Question } from '../interfaces/questions.interface';
+import { Player } from '../interfaces/players.interface';
 
 class GamesController {
   public gameService = getGameService();
@@ -96,6 +97,18 @@ class GamesController {
       const game: Game = await this.gameService.getGameByJoinCode(joinCode);
 
       res.status(200).json(game);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // gets a game by its game ID
+  public getPlayersInGame = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const joinCode: string = req.params.joinCode;
+      const players: Player[] = await this.gameService.getActivePlayers(joinCode);
+
+      res.status(200).json(players);
     } catch (error) {
       next(error);
     }

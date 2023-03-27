@@ -3,7 +3,6 @@ import { Game } from '../interfaces/games.interface';
 import { Player } from '../interfaces/players.interface';
 import gameModel from '../models/game.model';
 import playerModel from '../models/player.model';
-import { isEmpty } from '../utils/util';
 import PlayerService from './player.service';
 import { Question } from '../interfaces/questions.interface';
 import questionModel from '../models/question.model';
@@ -51,18 +50,12 @@ class GameService {
   }
 
   // get all the active players in the game
-  public async getActivePlayers(gameID: string) {
-    const game: Game = await this.games.findById({ _id: gameID });
-
-    const playerList: Player[] = [];
-    const playerInGameCursor = this.players.find({ game: gameID }).cursor();
-    for (let player: Player = await playerInGameCursor.next(); player != null; player = await playerInGameCursor.next()) {
-      if (player.active) {
-        playerList.push(player);
-      }
-    }
-
-    return playerList;
+  public async getActivePlayers(gameCode: string) {
+    const game: Game = await this.getGameByJoinCode(gameCode);
+    
+    // find all players
+    const players: Player[] = (await this.playerService.findGamePlayers(game));
+    return players;
   }
 
   // starts a game when players are ready
