@@ -1,3 +1,4 @@
+import { createQuestions } from '../utils/createQuestions';
 import { NextFunction, Request, Response } from 'express';
 
 class IndexController {
@@ -7,6 +8,11 @@ class IndexController {
     } catch (error) {
       next(error);
     }
+  };
+
+  public resetQuestions = async (req: Request, res: Response, next: NextFunction) => {
+    await createQuestions();
+    res.status(200).send('Created questions');
   };
 }
 
