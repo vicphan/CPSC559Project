@@ -89,7 +89,7 @@ class GameService {
     const game: Game = await this.getGameByJoinCode(joinCode);
 
     // find all players
-    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (a.totalScore > b.totalScore ? 1 : -1));
+    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (b.totalScore > a.totalScore ? 1 : -1));
 
     // get updated leaderboard
     const leaderboard: string[] = await this.updateLeaderboard(players);
@@ -133,15 +133,16 @@ class GameService {
   // updates the leader board with the players that have the top 10 scores
   // if there are less than 10 players, the leaderboard contains all the players
   public async updateLeaderboard(players: Player[]): Promise<string[]> {
-    const leaderboard: string[] = [];
-
+    let gamePlayers: string[] = [];
+  
     let maxPlayers = 10;
     if (players.length < 10) {
       maxPlayers = players.length;
     }
-    for (let i = 0; i < maxPlayers; i++) {
-      leaderboard.push(players[i].name + ':' + players[i].totalScore.toString());
+    for (let i = 0; i < players.length; i++) {
+      gamePlayers.push(players[i].name + ':' + players[i].totalScore);
     }
+    const leaderboard: string[] = gamePlayers.slice(0, 10);
     return leaderboard;
   }
 
