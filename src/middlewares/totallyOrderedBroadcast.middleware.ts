@@ -12,6 +12,7 @@ export const totallyOrderedBroadcastMiddleware = async (req: Request, res: Respo
   const requestId = req.header('requestId');
   if (!req.header('tob') || !originUrl || !incomingTimestamp || !requestId) {
     next();
+    return;
   }
   console.log('Applying tob middleware');
   tobQueue.push([requestId, incomingTimestamp, originUrl]);

@@ -13,7 +13,6 @@ import { dbConnection } from './databases/dbConnection';
 import { Routes } from './interfaces/routes.interface';
 import errorMiddleware from './middlewares/error.middleware';
 import { logger, stream } from './utils/logger';
-import { initializeSocket } from './sockets/socket';
 import { logicalTimestampMiddleware } from './middlewares/timestamp.middleware';
 import { totallyOrderedBroadcastMiddleware } from './middlewares/totallyOrderedBroadcast.middleware';
 
