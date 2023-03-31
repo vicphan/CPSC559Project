@@ -14,6 +14,10 @@ class IndexController {
     await createQuestions();
     res.status(200).send('Created questions');
   };
+
+  public ping = (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).send('pong');
+  };
 }
 
 export default IndexController;

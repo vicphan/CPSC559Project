@@ -14,6 +14,7 @@ class IndexRoute implements Routes {
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.indexController.index);
     this.router.get(`${this.path}resetQuestions`, this.indexController.resetQuestions);
+    this.router.get(`${this.path}ping`, this.indexController.ping);
   }
 }
 
