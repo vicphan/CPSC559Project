@@ -4,7 +4,7 @@ import { tobQueue } from '../utils/priorityQueue';
 import { sleep } from '../utils/sleep';
 import { NextFunction, Request, Response } from 'express';
 
-const MAX_ATTEMPTS = 10;
+const MAX_ATTEMPTS = 30;
 
 export const totallyOrderedBroadcastMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const originUrl = req.header('originUrl');
@@ -21,11 +21,13 @@ export const totallyOrderedBroadcastMiddleware = async (req: Request, res: Respo
     const [headRequestId] = tobQueue.peek();
     console.log(`HeadReqId: ${headRequestId}`);
     if (headRequestId === requestId && isEarlierThanEachOriginsLatestUpdate(incomingTimestamp)) {
+      tobQueue.pop();
       break;
     }
     attempts += 1;
     if (attempts === MAX_ATTEMPTS) {
       next(new HttpException(555, 'Totally ordered broadcast waited too long'));
+      return;
     }
     await sleep(100);
   }

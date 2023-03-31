@@ -27,7 +27,7 @@ class IndexController {
       return;
     }
     deleteOriginUrlFromUpdateTracker(urlToRemove);
-    res.status(200).send('removed if present');
+    res.status(200).send(`removed ${urlToRemove} if present`);
   };
 }
 
