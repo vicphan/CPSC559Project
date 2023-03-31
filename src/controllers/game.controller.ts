@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { Game } from '../interfaces/games.interface';
+import { Game, gameToJson, convertGameListToJson } from '../interfaces/games.interface';
 import { getGameService } from '../services/game.service';
-import { Question } from '../interfaces/questions.interface';
-import { Player } from '../interfaces/players.interface';
+import { Question, questionToJson } from '../interfaces/questions.interface';
+import { Player, convertPlayerListToJson, } from '../interfaces/players.interface';
 
 class GamesController {
   public gameService = getGameService();
@@ -12,7 +12,7 @@ class GamesController {
     try {
       const findAllGamesData: Game[] = await this.gameService.findAllGames();
 
-      res.status(200).json(findAllGamesData);
+      res.status(200).json(convertGameListToJson(findAllGamesData));
     } catch (error) {
       next(error);
     }
@@ -24,7 +24,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const createGameData: Game = await this.gameService.createGame(joinCode);
 
-      res.status(201).json(createGameData);
+      res.status(201).json(gameToJson(createGameData));
     } catch (error) {
       next(error);
     }
@@ -36,7 +36,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const updateGameData: Game = await this.gameService.startGame(joinCode);
 
-      res.status(200).json(updateGameData);
+      res.status(200).json(gameToJson(updateGameData));
     } catch (error) {
       next(error);
     }
@@ -48,7 +48,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const endGameData: Game = await this.gameService.endGame(joinCode);
 
-      res.status(200).json(endGameData);
+      res.status(200).json(gameToJson(endGameData));
     } catch (error) {
       next(error);
     }
@@ -60,7 +60,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const updatedLeaderboardData: Game = await this.gameService.getLeaderboard(joinCode);
 
-      res.status(200).json(updatedLeaderboardData);
+      res.status(200).json(gameToJson(updatedLeaderboardData));
     } catch (error) {
       next(error);
     }
@@ -72,7 +72,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const question: Question = await this.gameService.getQuestion(joinCode);
 
-      res.status(200).json(question);
+      res.status(200).json(questionToJson(question));
     } catch (error) {
       next(error);
     }
@@ -84,7 +84,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const game: Game = await this.gameService.nextQuestion(joinCode);
 
-      res.status(200).json(game);
+      res.status(200).json(gameToJson(game));
     } catch (error) {
       next(error);
     }
@@ -96,7 +96,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const game: Game = await this.gameService.getGameByJoinCode(joinCode);
 
-      res.status(200).json(game);
+      res.status(200).json(gameToJson(game));
     } catch (error) {
       next(error);
     }
@@ -108,7 +108,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const players: Player[] = await this.gameService.getActivePlayers(joinCode);
 
-      res.status(200).json(players);
+      res.status(200).json(convertPlayerListToJson(players));
     } catch (error) {
       next(error);
     }

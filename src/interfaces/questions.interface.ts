@@ -5,4 +5,13 @@ export interface Question {
     answers: string[];
     index: Number;
   }
+
+  export function questionToJson(question) {
+    return {
+      prompt: question.prompt,
+      correctAnswerIndex: question.correctAnswerIndex,
+      answers: question.answers,
+      index: question.index,
+    }
+  }
   
