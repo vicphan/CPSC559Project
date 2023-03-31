@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Player } from '../interfaces/players.interface';
+import { Player, playerToJson, convertPlayerListToJson } from '../interfaces/players.interface';
 import playerService from '../services/player.service';
 import { CreatePlayerDto } from '../dtos/players.dto';
 import { SubmitQuestionDto } from '../dtos/submitQuestion.dto';
@@ -12,7 +12,7 @@ class PlayersController {
     try {
       const findAllPlayersData: Player[] = await this.playerService.findAllPlayers();
 
-      res.status(200).json(findAllPlayersData);
+      res.status(200).json(convertPlayerListToJson(findAllPlayersData));
     } catch (error) {
       next(error);
     }
@@ -24,7 +24,7 @@ class PlayersController {
       const playerData: CreatePlayerDto = req.body;
       const createPlayerData: Player = await this.playerService.createPlayer(playerData);
 
-      res.status(201).json(createPlayerData);
+      res.status(201).json(playerToJson(createPlayerData));
     } catch (error) {
       next(error);
     }
@@ -36,7 +36,7 @@ class PlayersController {
       const answerData: SubmitQuestionDto = req.body;
       const updatedPlayerData: Player = await this.playerService.submitAnswer(playerName, answerData);
 
-      res.status(200).json(updatedPlayerData);
+      res.status(200).json(playerToJson(updatedPlayerData));
     } catch (error) {
       next(error);
     }
