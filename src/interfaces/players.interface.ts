@@ -14,14 +14,12 @@ export function playerToJson(player) {
     name: player.name,
     totalScore: player.totalScore,
     scores: player.scores,
-    game: player.game,
     active: player.active,
   }
 }
 
 export function convertPlayerListToJson(playerList)
 {
-  console.log(playerList)
   playerList.forEach(convertToJson)
   
   return playerList;
