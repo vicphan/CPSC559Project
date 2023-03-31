@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Game, gameToJson } from '../interfaces/games.interface';
 import { getGameService } from '../services/game.service';
-import { Question } from '../interfaces/questions.interface';
+import { Question, questionToJson } from '../interfaces/questions.interface';
 import { Player, convertPlayerListToJson } from '../interfaces/players.interface';
 
 class GamesController {
@@ -72,7 +72,7 @@ class GamesController {
       const joinCode: string = req.params.joinCode;
       const question: Question = await this.gameService.getQuestion(joinCode);
 
-      res.status(200).json(question);
+      res.status(200).json(questionToJson(question));
     } catch (error) {
       next(error);
     }
