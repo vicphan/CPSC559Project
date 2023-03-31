@@ -14,3 +14,17 @@ export function gameToJson(game) {
       currentQuestion: game.currentQuestion,
     }
   }
+
+  export function convertGameListToJson(gameList)
+  {
+    console.log(gameList)
+    gameList.forEach(convertToJson)
+    
+    return gameList;
+  
+  }
+  
+  function convertToJson(item, index, arr)
+  {
+    arr[index] = gameToJson(item);
+  }

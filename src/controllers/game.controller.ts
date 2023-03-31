@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { Game, gameToJson } from '../interfaces/games.interface';
+import { Game, gameToJson, convertGameListToJson } from '../interfaces/games.interface';
 import { getGameService } from '../services/game.service';
 import { Question, questionToJson } from '../interfaces/questions.interface';
-import { Player, convertPlayerListToJson } from '../interfaces/players.interface';
+import { Player, convertPlayerListToJson, } from '../interfaces/players.interface';
 
 class GamesController {
   public gameService = getGameService();
@@ -12,7 +12,7 @@ class GamesController {
     try {
       const findAllGamesData: Game[] = await this.gameService.findAllGames();
 
-      res.status(200).json(findAllGamesData);
+      res.status(200).json(convertGameListToJson(findAllGamesData));
     } catch (error) {
       next(error);
     }
