@@ -3,7 +3,6 @@ import { Game } from '../interfaces/games.interface';
 import { Player } from '../interfaces/players.interface';
 import gameModel from '../models/game.model';
 import playerModel from '../models/player.model';
-import { isEmpty } from '../utils/util';
 import PlayerService from './player.service';
 import { Question } from '../interfaces/questions.interface';
 import questionModel from '../models/question.model';
@@ -56,18 +55,12 @@ class GameService {
   }
 
   // get all the active players in the game
-  public async getActivePlayers(gameID: string) {
-    const game: Game = await this.games.findById({ _id: gameID });
-
-    const playerList: Player[] = [];
-    const playerInGameCursor = this.players.find({ game: gameID }).cursor();
-    for (let player: Player = await playerInGameCursor.next(); player != null; player = await playerInGameCursor.next()) {
-      if (player.active) {
-        playerList.push(player);
-      }
-    }
-
-    return playerList;
+  public async getActivePlayers(gameCode: string) {
+    const game: Game = await this.getGameByJoinCode(gameCode);
+    
+    // find all players
+    const players: Player[] = (await this.playerService.findGamePlayers(game));
+    return players;
   }
 
   // starts a game when players are ready
@@ -104,7 +97,7 @@ class GameService {
     const game: Game = await this.getGameByJoinCode(joinCode);
 
     // find all players
-    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (a.totalScore > b.totalScore ? 1 : -1));
+    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (b.totalScore > a.totalScore ? 1 : -1));
 
     // get updated leaderboard
     const leaderboard: string[] = await this.updateLeaderboard(players);
@@ -170,7 +163,7 @@ class GameService {
     var game: Game = await this.getGameByJoinCode(joinCode);
 
     //If the game doesnt exist yet create it
-    if (isEmpty(game))
+    if (game == null)
     {
       game = await this.createGame(joinCode);
       different = true;
@@ -190,7 +183,7 @@ class GameService {
       var player: Player = await this.players.findOne({name: playerNames[i]});
       
       //If player doesn't exist in this game create them
-      if (isEmpty(player))
+      if (player == null)
       {
         player = await this.createPlayer(playerNames[i], game);
       }
@@ -273,6 +266,13 @@ class GameService {
 
     await this.players.findByIdAndUpdate(player._id, { scores: newPlayerScores, totalScore: newTotalScore });
   }
+
+  public async clearAll() {
+    await this.questions.deleteMany({});
+    await this.players.deleteMany({});
+    await this.games.deleteMany({});
+  }
+  
 }
 
 let gs;
