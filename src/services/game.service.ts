@@ -168,7 +168,6 @@ class GameService {
     await this.copyGames(gameList);
 
     // Sync Players
-    console.log("HERE");
     await this.copyPlayers(syncData.playerList);
   }
 
