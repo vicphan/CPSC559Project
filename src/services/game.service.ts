@@ -168,13 +168,14 @@ class GameService {
     await this.copyGames(gameList);
 
     // Sync Players
-    
+    console.log("HERE");
+    await this.copyPlayers(syncData.playerList);
   }
 
   public async copyGames(gameList:  Game[])
   {
-    console.log(gameList);
-    gameList.forEach((game) => {this.copyGame(game, this)});
+    const promises = gameList.map((game) => this.copyGame(game, this));
+    await Promise.allSettled(promises);
   }
 
   public async copyGame(game: Game, self)
@@ -185,6 +186,22 @@ class GameService {
       leaderboard: game.leaderboard,
       currentQuestion: game.currentQuestion
     });
+  }
+
+  public async copyPlayers(playerList)
+  {
+    playerList.forEach((player) => {this.copyPlayer(player, this)});
+  }
+
+  public async copyPlayer(player, self)
+  {
+    const game : Game = await self.games.findOne({ joinCode: player.joinCode });
+    await self.players.create({ 
+      name: player.name, 
+      game: game, 
+      score: player.score, 
+      active: player.active, 
+      joinCode: player.joinCode });
   }
   
   public async clearAll() {
