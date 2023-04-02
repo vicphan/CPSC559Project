@@ -17,7 +17,6 @@ export function gameToJson(game) {
 
   export function convertGameListToJson(gameList)
   {
-    console.log(gameList)
     gameList.forEach(convertToJson)
     
     return gameList;

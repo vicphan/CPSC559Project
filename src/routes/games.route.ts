@@ -22,7 +22,7 @@ class GamesRoute implements Routes {
     this.router.put(`${this.path}/:joinCode`, this.gamesController.startGame);
     this.router.delete(`${this.path}/:joinCode`, this.gamesController.endGame);
     this.router.put(`/syncDatabase`, this.gamesController.syncDatabase);
-    this.router.put(`/requestSync`, this.gamesController.requestSync);
+    this.router.get(`/requestSync`, this.gamesController.requestSync);
     this.router.delete(`/clearall`, this.gamesController.clearAll);
   }
 }

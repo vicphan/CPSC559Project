@@ -1,6 +1,6 @@
 import { HttpException } from '../exceptions/HttpException';
-import { Game } from '../interfaces/games.interface';
-import { Player } from '../interfaces/players.interface';
+import { convertGameListToJson, Game } from '../interfaces/games.interface';
+import { Player, convertPlayerListToJson } from '../interfaces/players.interface';
 import gameModel from '../models/game.model';
 import playerModel from '../models/player.model';
 import PlayerService from './player.service';
@@ -206,8 +206,15 @@ class GameService {
    // Send out sync database message
    public async requestSyncDatabase(requestData: RequestSyncDto)
    {
-     
-   }
+    const url = requestData.url + '/syncDatabase';
+    const data = {
+      gameList: convertGameListToJson(await this.games.find({})),
+      playerList: convertPlayerListToJson(await this.players.find({}))
+    }
+    this.axios.put(url, data).catch(err => {
+      console.log(err, err.response)
+      });
+    }
   
   public async clearAll() {
     await this.questions.deleteMany({});
