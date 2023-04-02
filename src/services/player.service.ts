@@ -46,7 +46,7 @@ class PlayerService {
 
     let newPlayerScore = player.score;
 
-    newPlayerScore = newPlayerScore + questionData.secondsLeft;
+    newPlayerScore = newPlayerScore + questionData.correctAnswer;
 
     const updatedPlayer: Player = await this.players.findByIdAndUpdate(player._id, { score: newPlayerScore });
 
