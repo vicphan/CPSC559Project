@@ -4,7 +4,7 @@ import { tobQueue } from '../utils/priorityQueue';
 import { sleep } from '../utils/sleep';
 import { NextFunction, Request, Response } from 'express';
 
-const MAX_ATTEMPTS = 30;
+const MAX_ATTEMPTS = 15;
 
 export const totallyOrderedBroadcastMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const originUrl = req.header('originUrl');
