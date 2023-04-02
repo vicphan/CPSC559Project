@@ -14,6 +14,7 @@ export function playerToJson(player) {
     totalScore: player.totalScore,
     scores: player.scores,
     active: player.active,
+    game: player.game.joinCode,
   }
 }
 
