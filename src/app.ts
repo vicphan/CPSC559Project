@@ -13,7 +13,8 @@ import { dbConnection } from './databases/dbConnection';
 import { Routes } from './interfaces/routes.interface';
 import errorMiddleware from './middlewares/error.middleware';
 import { logger, stream } from './utils/logger';
-import { initializeSocket } from './sockets/socket';
+import { logicalTimestampMiddleware } from './middlewares/timestamp.middleware';
+import { totallyOrderedBroadcastMiddleware } from './middlewares/totallyOrderedBroadcast.middleware';
 
 class App {
   public app: express.Application;
@@ -62,6 +63,8 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.app.use(logicalTimestampMiddleware);
+    this.app.use(totallyOrderedBroadcastMiddleware);
   }
 
   private initializeRoutes(routes: Routes[]) {
