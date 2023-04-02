@@ -31,6 +31,7 @@ class App {
     this.initializeSwagger();
     this.initializeErrorHandling();
     this.initializeSockets();
+    this.syncDatabase();
   }
 
   public listen() {
@@ -92,6 +93,27 @@ class App {
 
   private initializeSockets() {
     // initializeSocket(this.app);
+  }
+
+  private syncDatabase() {
+    const fs = require('fs');
+    const allServers = fs.readFileSync('serverList.txt', 'utf-8');	    
+    allServers.split(/\r?\n/).forEach((server) => {	
+      if (server != URL){
+        this.sendSyncRequest(server);
+      }
+    });
+  }
+  
+  private sendSyncRequest(server)
+  {
+    const url = server + '/requestSync';
+    const data = {
+      url: URL
+    }
+    require('axios').get(url, data).catch(err => {
+      console.log(err, err.response)
+      });
   }
 }
 
