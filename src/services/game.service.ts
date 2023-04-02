@@ -38,7 +38,7 @@ class GameService {
       currentQuestion: currentQuestion,
     });
 
-    this.sendSyncMessages(createGameData, -1);
+    //this.sendSyncMessages(createGameData, -1);
 
     return createGameData;
   }
@@ -72,7 +72,7 @@ class GameService {
 
     const updated: Game = await this.games.findById(updateGameById._id);
     
-    this.sendSyncMessages(updated, -1);
+    //this.sendSyncMessages(updated, -1);
 
     return updated;
   }
@@ -97,7 +97,7 @@ class GameService {
     const game: Game = await this.getGameByJoinCode(joinCode);
 
     // find all players
-    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (b.totalScore > a.totalScore ? 1 : -1));
+    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (a.score > b.score ? 1 : -1));
 
     // get updated leaderboard
     const leaderboard: string[] = await this.updateLeaderboard(players);
@@ -131,7 +131,7 @@ class GameService {
 
     const updatedGame: Game = await this.games.findByIdAndUpdate(game._id, { currentQuestion: nextQuestion });
 
-    this.sendSyncMessages(updatedGame, nextQuestion-1);
+    //this.sendSyncMessages(updatedGame, nextQuestion-1);
 
     return updatedGame;
   }
@@ -150,122 +150,122 @@ class GameService {
       maxPlayers = players.length;
     }
     for (let i = 0; i < maxPlayers; i++) {
-      leaderboard.push(players[i].name + ':' + players[i].totalScore.toString());
+      leaderboard.push(players[i].name + ':' + players[i].score.toString());
     }
     return leaderboard;
   }
 
-  // Sync the game with what other servers are doing
-  // If question index is -1 only check that game exists and players match
-  public async syncGame(joinCode: string, syncData: SyncGameDto) : Promise<Game>
-  {
-    var different = false;
-    var game: Game = await this.getGameByJoinCode(joinCode);
+  // // Sync the game with what other servers are doing
+  // // If question index is -1 only check that game exists and players match
+  // public async syncGame(joinCode: string, syncData: SyncGameDto) : Promise<Game>
+  // {
+  //   var different = false;
+  //   var game: Game = await this.getGameByJoinCode(joinCode);
 
-    //If the game doesnt exist yet create it
-    if (game == null)
-    {
-      game = await this.createGame(joinCode);
-      different = true;
-    }
+  //   //If the game doesnt exist yet create it
+  //   if (game == null)
+  //   {
+  //     game = await this.createGame(joinCode);
+  //     different = true;
+  //   }
 
-    //If sync is for the current question you missed the question update
-    if (game.currentQuestion == syncData.questionIndex)
-    {
-      game = await this.nextQuestion(joinCode);
-      different = true;
-    }
+  //   //If sync is for the current question you missed the question update
+  //   if (game.currentQuestion == syncData.questionIndex)
+  //   {
+  //     game = await this.nextQuestion(joinCode);
+  //     different = true;
+  //   }
 
-    //Loop through every player in the sync message
-    var playerNames = Object.keys(syncData.playerScores);
-    for (let i = 0; i < playerNames.length; i++)
-    {
-      var player: Player = await this.players.findOne({name: playerNames[i]});
+  //   //Loop through every player in the sync message
+  //   var playerNames = Object.keys(syncData.playerScores);
+  //   for (let i = 0; i < playerNames.length; i++)
+  //   {
+  //     var player: Player = await this.players.findOne({name: playerNames[i]});
       
-      //If player doesn't exist in this game create them
-      if (player == null)
-      {
-        player = await this.createPlayer(playerNames[i], game);
-      }
+  //     //If player doesn't exist in this game create them
+  //     if (player == null)
+  //     {
+  //       player = await this.createPlayer(playerNames[i], game);
+  //     }
 
-      //Take the highest score if there is a difference
-      var score = syncData.playerScores[playerNames[i]];
-      if (player.scores[i] == null || player.scores[i] < score)
-      {
-        this.updatePlayerScore(player, syncData.questionIndex, score);
-        different = true;
-      }
-    }
+  //     //Take the highest score if there is a difference
+  //     var score = syncData.playerScores[playerNames[i]];
+  //     if (player.scores[i] == null || player.scores[i] < score)
+  //     {
+  //       this.updatePlayerScore(player, syncData.questionIndex, score);
+  //       different = true;
+  //     }
+  //   }
 
-    //If sync resulted in a change send out sync message as others may have missed changes too 
-    if (different)
-    {
-      this.sendSyncMessages(game, syncData.questionIndex);
-    }
+  //   //If sync resulted in a change send out sync message as others may have missed changes too 
+  //   if (different)
+  //   {
+  //     this.sendSyncMessages(game, syncData.questionIndex);
+  //   }
 
-    return game;
-  }
+  //   return game;
+  // }
 
-  public async sendSyncMessages(game, questionIndex)
-  {
-    const fs = require('fs');
-    const allServers = fs.readFileSync('serverList.txt', 'utf-8');
-    allServers.split(/\r?\n/).forEach((server) => {
-      if (server != URL){
-        this.sendSyncMessage(game, questionIndex, server);
-      }
-    });
-  }
+  // public async sendSyncMessages(game, questionIndex)
+  // {
+  //   const fs = require('fs');
+  //   const allServers = fs.readFileSync('serverList.txt', 'utf-8');
+  //   allServers.split(/\r?\n/).forEach((server) => {
+  //     if (server != URL){
+  //       this.sendSyncMessage(game, questionIndex, server);
+  //     }
+  //   });
+  // }
 
-  public async sendSyncMessage(game, questionIndex, server)
-  {
-    const url = server + '/games/sync/' + game.joinCode;
-    const playerScores = await this.getPlayerScoresForQuestion(questionIndex, game._id)
-    const data = {questionIndex: questionIndex,
-                  playerScores: playerScores};
-    var res = this.axios.put(url, data).catch(err => {
-      console.log(err, err.response)
-  });
-    console.log(res);
-  }
+  // public async sendSyncMessage(game, questionIndex, server)
+  // {
+  //   const url = server + '/games/sync/' + game.joinCode;
+  //   const playerScores = await this.getPlayerScoresForQuestion(questionIndex, game._id)
+  //   const data = {questionIndex: questionIndex,
+  //                 playerScores: playerScores};
+  //   var res = this.axios.put(url, data).catch(err => {
+  //     console.log(err, err.response)
+  // });
+  //   console.log(res);
+  // }
 
-  public async getPlayerScoresForQuestion(questionIndex, gameId)
-  {
-    if (questionIndex == -1)
-      return {};
+  // public async getPlayerScoresForQuestion(questionIndex, gameId)
+  // {
+  //   if (questionIndex == -1)
+  //     return {};
     
-    var playerScoreList = {};
+  //   var playerScoreList = {};
     
-    const playerInGameCursor = this.players.find({ game: gameId }).cursor();
-    for (let player: Player = await playerInGameCursor.next(); player != null; player = await playerInGameCursor.next()) {
-      playerScoreList[player.name] = player.scores[questionIndex];
-    }
+  //   const playerInGameCursor = this.players.find({ game: gameId }).cursor();
+  //   for (let player: Player = await playerInGameCursor.next(); player != null; player = await playerInGameCursor.next()) {
+  //     playerScoreList[player.name] = player.scores[questionIndex];
+  //   }
 
-    return playerScoreList;
-  }
+  //   return playerScoreList;
+  // }
 
-  public async createPlayer(playerName, game): Promise<Player>
-  {
-    var newPlayer: Player = await this.players.create({ name: playerName, game: game, scores: [], active: true, totalScore: 0 });
-    return newPlayer;
-  }
+  // public async createPlayer(playerName, game): Promise<Player>
+  // {
+  //   var newPlayer: Player = await this.players.create({ name: playerName, game: game, scores: [], active: true, totalScore: 0 });
+  //   return newPlayer;
+  // }
 
-  public async updatePlayerScore(player, questionIndex, score)
-  {
-    let newPlayerScores = player.scores;
+  // public async updatePlayerScore(player, questionIndex, score)
+  // {
+  //   let newPlayerScores = player.scores;
 
-    newPlayerScores[questionIndex] = score;
+  //   newPlayerScores[questionIndex] = score;
 
-    let newTotalScore =0;
-    for (let i = 0; i < newPlayerScores.length; i++)
-    {
-      if (newPlayerScores[i] != null){
-        newTotalScore += newPlayerScores[i];
-      }
-    }
+  //   let newTotalScore =0;
+  //   for (let i = 0; i < newPlayerScores.length; i++)
+  //   {
+  //     if (newPlayerScores[i] != null){
+  //       newTotalScore += newPlayerScores[i];
+  //     }
+  //   }
 
-    await this.players.findByIdAndUpdate(player._id, { scores: newPlayerScores, totalScore: newTotalScore });
-  }
+  //   await this.players.findByIdAndUpdate(player._id, { scores: newPlayerScores, totalScore: newTotalScore });
+  // }
   
   public async clearAll() {
     await this.questions.deleteMany({});

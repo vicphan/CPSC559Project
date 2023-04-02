@@ -130,9 +130,9 @@ class GamesController {
     try {
       const joinCode: string = req.params.joinCode;
       const syncData: SyncGameDto = req.body;
-      const syncedGame: Game = await this.gameService.syncGame(joinCode, syncData);
+      //const syncedGame: Game = await this.gameService.syncGame(joinCode, syncData);
 
-      res.status(200).json(syncedGame);
+      res.status(200).json();
     } catch (error) {
       next(error);
     }

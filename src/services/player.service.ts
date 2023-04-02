@@ -29,11 +29,10 @@ class PlayerService {
     const game: Game = await this.games.findOne({ joinCode: playerData.joinCode });
     if (!game) throw new HttpException(404, `Game ${playerData.joinCode} could not be found`);
 
-    const scores = [];
-    const totalScore = 0;
+    const score = 0;
     const active = true;
 
-    const createdPlayerData: Player = await this.players.create({ name: name, game: game, scores: scores, active: active, totalScore: totalScore });
+    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score, active: active });
 
     return createdPlayerData;
   }
@@ -45,26 +44,13 @@ class PlayerService {
     const player: Player = await this.players.findOne({name: playerName});
     if (!player) throw new HttpException(404, `Player could not be found`);
 
-    const game: Game = await this.games.findById({ _id: player.game });
-    if (!game) throw new HttpException(404, `Player game could not be found`);
-
-    let newPlayerScores = player.scores;
-
-    console.log(game.currentQuestion);
+    let newPlayerScore = player.score;
 
     if (questionData.correctAnswer) {
-      newPlayerScores[game.currentQuestion] = 1;
+      newPlayerScore = newPlayerScore + 1;
     }
 
-    let newTotalScore =0;
-    for (let i = 0; i < newPlayerScores.length; i++)
-    {
-      if (newPlayerScores[i] != null){
-        newTotalScore += newPlayerScores[i];
-      }
-    }
-
-    const updatedPlayer: Player = await this.players.findByIdAndUpdate(player._id, { scores: newPlayerScores, totalScore: newTotalScore });
+    const updatedPlayer: Player = await this.players.findByIdAndUpdate(player._id, { score: newPlayerScore });
 
     return updatedPlayer;
   }
