@@ -6,7 +6,7 @@ import playerModel from '../models/player.model';
 import PlayerService from './player.service';
 import { Question } from '../interfaces/questions.interface';
 import questionModel from '../models/question.model';
-import { SyncDatabaseDto } from '@/dtos/syncDatabase.dto';
+import { RequestSyncDto, SyncDatabaseDto } from '@/dtos/syncDatabase.dto';
 import { URL } from '../config';
 
 class GameService {
@@ -202,6 +202,12 @@ class GameService {
       active: player.active, 
       joinCode: player.joinCode });
   }
+
+   // Send out sync database message
+   public async requestSyncDatabase(requestData: RequestSyncDto)
+   {
+     
+   }
   
   public async clearAll() {
     await this.questions.deleteMany({});

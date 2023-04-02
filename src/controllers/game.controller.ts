@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Game, gameToJson, convertGameListToJson } from '../interfaces/games.interface';
 import { getGameService } from '../services/game.service';
-import { SyncDatabaseDto} from '../dtos/syncDatabase.dto';
+import { SyncDatabaseDto, RequestSyncDto} from '../dtos/syncDatabase.dto';
 import { Question, questionToJson } from '../interfaces/questions.interface';
 import { Player, convertPlayerListToJson, } from '../interfaces/players.interface';
 
@@ -130,6 +130,18 @@ class GamesController {
     try {
       const syncData: SyncDatabaseDto = req.body;
       await this.gameService.syncDatabase(syncData);
+
+      res.status(200).json();
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // Request Sync database message
+  public requestSync = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const requestSyncData: RequestSyncDto = req.body;
+      await this.gameService.requestSyncDatabase(requestSyncData);
 
       res.status(200).json();
     } catch (error) {

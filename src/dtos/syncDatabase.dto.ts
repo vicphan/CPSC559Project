@@ -1,4 +1,4 @@
-import { IsArray } from 'class-validator';
+import { IsArray, IsString } from 'class-validator';
 import { Game } from '@/interfaces/games.interface';
 
 export class SyncDatabaseDto {
@@ -7,4 +7,9 @@ export class SyncDatabaseDto {
 
   @IsArray()
   public playerList: [];
+}
+
+export class RequestSyncDto {
+  @IsString()
+  public url: String;
 }
