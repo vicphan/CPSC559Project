@@ -171,13 +171,13 @@ class GameService {
     
   }
 
-  private async copyGames(gameList:  Game[])
+  public async copyGames(gameList:  Game[])
   {
     console.log(gameList);
     gameList.forEach((game) => {this.copyGame(game, this)});
   }
 
-  private async copyGame(game: Game, self)
+  public async copyGame(game: Game, self)
   {
     await self.games.create({
       joinCode: game.joinCode,
