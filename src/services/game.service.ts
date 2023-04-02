@@ -6,7 +6,7 @@ import playerModel from '../models/player.model';
 import PlayerService from './player.service';
 import { Question } from '../interfaces/questions.interface';
 import questionModel from '../models/question.model';
-import { SyncGameDto } from '@/dtos/syncDatabase.dto';
+import { SyncDatabaseDto } from '@/dtos/syncDatabase.dto';
 import { URL } from '../config';
 
 class GameService {
@@ -156,116 +156,36 @@ class GameService {
   }
 
   // Sync the entire database
-  // If question index is -1 only check that game exists and players match
-  public async syncDatabase(syncData: SyncGameDto)
+  public async syncDatabase(syncData: SyncDatabaseDto)
   {
-    // var different = false;
-    // var game: Game = await this.getGameByJoinCode(joinCode);
+    
+    // Clear current database
+    await this.games.deleteMany({});
+    await this.players.deleteMany({});
 
-    // //If the game doesnt exist yet create it
-    // if (game == null)
-    // {
-    //   game = await this.createGame(joinCode);
-    //   different = true;
-    // }
+    // Sync games
+    const gameList : Game[] = syncData.gameList;
+    await this.copyGames(gameList);
 
-    // //If sync is for the current question you missed the question update
-    // if (game.currentQuestion == syncData.questionIndex)
-    // {
-    //   game = await this.nextQuestion(joinCode);
-    //   different = true;
-    // }
-
-    // //Loop through every player in the sync message
-    // var playerNames = Object.keys(syncData.playerScores);
-    // for (let i = 0; i < playerNames.length; i++)
-    // {
-    //   var player: Player = await this.players.findOne({name: playerNames[i]});
-      
-    //   //If player doesn't exist in this game create them
-    //   if (player == null)
-    //   {
-    //     player = await this.createPlayer(playerNames[i], game);
-    //   }
-
-    //   //Take the highest score if there is a difference
-    //   var score = syncData.playerScores[playerNames[i]];
-    //   if (player.scores[i] == null || player.scores[i] < score)
-    //   {
-    //     this.updatePlayerScore(player, syncData.questionIndex, score);
-    //     different = true;
-    //   }
-    // }
-
-    // //If sync resulted in a change send out sync message as others may have missed changes too 
-    // if (different)
-    // {
-    //   this.sendSyncMessages(game, syncData.questionIndex);
-    // }
-
-    // return game;
+    // Sync Players
+    
   }
 
-  // public async sendSyncMessages(game, questionIndex)
-  // {
-  //   const fs = require('fs');
-  //   const allServers = fs.readFileSync('serverList.txt', 'utf-8');
-  //   allServers.split(/\r?\n/).forEach((server) => {
-  //     if (server != URL){
-  //       this.sendSyncMessage(game, questionIndex, server);
-  //     }
-  //   });
-  // }
+  private async copyGames(gameList:  Game[])
+  {
+    console.log(gameList);
+    gameList.forEach((game) => {this.copyGame(game, this)});
+  }
 
-  // public async sendSyncMessage(game, questionIndex, server)
-  // {
-  //   const url = server + '/games/sync/' + game.joinCode;
-  //   const playerScores = await this.getPlayerScoresForQuestion(questionIndex, game._id)
-  //   const data = {questionIndex: questionIndex,
-  //                 playerScores: playerScores};
-  //   var res = this.axios.put(url, data).catch(err => {
-  //     console.log(err, err.response)
-  // });
-  //   console.log(res);
-  // }
-
-  // public async getPlayerScoresForQuestion(questionIndex, gameId)
-  // {
-  //   if (questionIndex == -1)
-  //     return {};
-    
-  //   var playerScoreList = {};
-    
-  //   const playerInGameCursor = this.players.find({ game: gameId }).cursor();
-  //   for (let player: Player = await playerInGameCursor.next(); player != null; player = await playerInGameCursor.next()) {
-  //     playerScoreList[player.name] = player.scores[questionIndex];
-  //   }
-
-  //   return playerScoreList;
-  // }
-
-  // public async createPlayer(playerName, game): Promise<Player>
-  // {
-  //   var newPlayer: Player = await this.players.create({ name: playerName, game: game, scores: [], active: true, totalScore: 0 });
-  //   return newPlayer;
-  // }
-
-  // public async updatePlayerScore(player, questionIndex, score)
-  // {
-  //   let newPlayerScores = player.scores;
-
-  //   newPlayerScores[questionIndex] = score;
-
-  //   let newTotalScore =0;
-  //   for (let i = 0; i < newPlayerScores.length; i++)
-  //   {
-  //     if (newPlayerScores[i] != null){
-  //       newTotalScore += newPlayerScores[i];
-  //     }
-  //   }
-
-  //   await this.players.findByIdAndUpdate(player._id, { scores: newPlayerScores, totalScore: newTotalScore });
-  // }
+  private async copyGame(game: Game, self)
+  {
+    await self.games.create({
+      joinCode: game.joinCode,
+      started: game.started,
+      leaderboard: game.leaderboard,
+      currentQuestion: game.currentQuestion
+    });
+  }
   
   public async clearAll() {
     await this.questions.deleteMany({});

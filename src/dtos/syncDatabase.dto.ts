@@ -1,10 +1,7 @@
-import { IsJSON } from 'class-validator';
-import { JsonObject } from 'swagger-ui-express';
+import { IsArray } from 'class-validator';
+import { Game } from '@/interfaces/games.interface';
 
 export class SyncDatabaseDto {
-  @IsJSON()
-  public games: JsonObject;
-
-  @IsJSON()
-  public players: JsonObject;
+  @IsArray()
+  public gameList: [Game];
 }
