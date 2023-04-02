@@ -1,20 +1,21 @@
 import { Game } from '../interfaces/games.interface';
+import gameModel from '../models/game.model';
 
 export interface Player {
   _id: string;
   name: string;
   score: number;
   game: Game;
+  joinCode: string;
   active: Boolean;
 }
 
 export function playerToJson(player) {
   return {
     name: player.name,
-    totalScore: player.totalScore,
-    scores: player.scores,
+    score: player.score,
     active: player.active,
-    game: player.game.joinCode,
+    joinCode: player.joinCode
   }
 }
 

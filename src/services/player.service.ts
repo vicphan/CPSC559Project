@@ -32,7 +32,7 @@ class PlayerService {
     const score = 0;
     const active = true;
 
-    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score, active: active });
+    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score, active: active, joinCode: playerData.joinCode });
 
     return createdPlayerData;
   }
