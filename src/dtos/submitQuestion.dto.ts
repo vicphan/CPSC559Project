@@ -1,6 +1,6 @@
-import { IsBoolean } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class SubmitQuestionDto {
-  @IsBoolean()
-  public correctAnswer: boolean;
+  @IsNumber()
+  public secondsLeft: number;
 }
