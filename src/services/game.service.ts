@@ -6,7 +6,7 @@ import playerModel from '../models/player.model';
 import PlayerService from './player.service';
 import { Question } from '../interfaces/questions.interface';
 import questionModel from '../models/question.model';
-import { SyncGameDto } from '@/dtos/syncGame.dto';
+import { SyncGameDto } from '@/dtos/syncDatabase.dto';
 import { URL } from '../config';
 
 class GameService {
@@ -155,56 +155,56 @@ class GameService {
     return leaderboard;
   }
 
-  // // Sync the game with what other servers are doing
-  // // If question index is -1 only check that game exists and players match
-  // public async syncGame(joinCode: string, syncData: SyncGameDto) : Promise<Game>
-  // {
-  //   var different = false;
-  //   var game: Game = await this.getGameByJoinCode(joinCode);
+  // Sync the entire database
+  // If question index is -1 only check that game exists and players match
+  public async syncDatabase(syncData: SyncGameDto)
+  {
+    // var different = false;
+    // var game: Game = await this.getGameByJoinCode(joinCode);
 
-  //   //If the game doesnt exist yet create it
-  //   if (game == null)
-  //   {
-  //     game = await this.createGame(joinCode);
-  //     different = true;
-  //   }
+    // //If the game doesnt exist yet create it
+    // if (game == null)
+    // {
+    //   game = await this.createGame(joinCode);
+    //   different = true;
+    // }
 
-  //   //If sync is for the current question you missed the question update
-  //   if (game.currentQuestion == syncData.questionIndex)
-  //   {
-  //     game = await this.nextQuestion(joinCode);
-  //     different = true;
-  //   }
+    // //If sync is for the current question you missed the question update
+    // if (game.currentQuestion == syncData.questionIndex)
+    // {
+    //   game = await this.nextQuestion(joinCode);
+    //   different = true;
+    // }
 
-  //   //Loop through every player in the sync message
-  //   var playerNames = Object.keys(syncData.playerScores);
-  //   for (let i = 0; i < playerNames.length; i++)
-  //   {
-  //     var player: Player = await this.players.findOne({name: playerNames[i]});
+    // //Loop through every player in the sync message
+    // var playerNames = Object.keys(syncData.playerScores);
+    // for (let i = 0; i < playerNames.length; i++)
+    // {
+    //   var player: Player = await this.players.findOne({name: playerNames[i]});
       
-  //     //If player doesn't exist in this game create them
-  //     if (player == null)
-  //     {
-  //       player = await this.createPlayer(playerNames[i], game);
-  //     }
+    //   //If player doesn't exist in this game create them
+    //   if (player == null)
+    //   {
+    //     player = await this.createPlayer(playerNames[i], game);
+    //   }
 
-  //     //Take the highest score if there is a difference
-  //     var score = syncData.playerScores[playerNames[i]];
-  //     if (player.scores[i] == null || player.scores[i] < score)
-  //     {
-  //       this.updatePlayerScore(player, syncData.questionIndex, score);
-  //       different = true;
-  //     }
-  //   }
+    //   //Take the highest score if there is a difference
+    //   var score = syncData.playerScores[playerNames[i]];
+    //   if (player.scores[i] == null || player.scores[i] < score)
+    //   {
+    //     this.updatePlayerScore(player, syncData.questionIndex, score);
+    //     different = true;
+    //   }
+    // }
 
-  //   //If sync resulted in a change send out sync message as others may have missed changes too 
-  //   if (different)
-  //   {
-  //     this.sendSyncMessages(game, syncData.questionIndex);
-  //   }
+    // //If sync resulted in a change send out sync message as others may have missed changes too 
+    // if (different)
+    // {
+    //   this.sendSyncMessages(game, syncData.questionIndex);
+    // }
 
-  //   return game;
-  // }
+    // return game;
+  }
 
   // public async sendSyncMessages(game, questionIndex)
   // {

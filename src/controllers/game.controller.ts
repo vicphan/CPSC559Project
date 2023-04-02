@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Game, gameToJson, convertGameListToJson } from '../interfaces/games.interface';
 import { getGameService } from '../services/game.service';
-import { SyncGameDto } from '../dtos/syncGame.dto';
+import { SyncDatabaseDto} from '../dtos/syncDatabase.dto';
 import { Question, questionToJson } from '../interfaces/questions.interface';
 import { Player, convertPlayerListToJson, } from '../interfaces/players.interface';
 
@@ -125,12 +125,11 @@ class GamesController {
     }
   };
 
-  // Sync the game
-  public syncGame = async (req: Request, res: Response, next: NextFunction) => {
+  // Sync the entire database
+  public syncDatabase = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const joinCode: string = req.params.joinCode;
-      const syncData: SyncGameDto = req.body;
-      //const syncedGame: Game = await this.gameService.syncGame(joinCode, syncData);
+      const syncData: SyncDatabaseDto = req.body;
+      await this.gameService.syncDatabase(syncData);
 
       res.status(200).json();
     } catch (error) {
