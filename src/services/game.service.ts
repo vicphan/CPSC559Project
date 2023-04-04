@@ -1,17 +1,20 @@
 import { HttpException } from '../exceptions/HttpException';
-import { Game } from '../interfaces/games.interface';
-import { Player } from '../interfaces/players.interface';
+import { convertGameListToJson, Game } from '../interfaces/games.interface';
+import { Player, convertPlayerListToJson } from '../interfaces/players.interface';
 import gameModel from '../models/game.model';
 import playerModel from '../models/player.model';
 import PlayerService from './player.service';
 import { Question } from '../interfaces/questions.interface';
 import questionModel from '../models/question.model';
+import { RequestSyncDto, SyncDatabaseDto } from '@/dtos/syncDatabase.dto';
+import { URL } from '../config';
 
 class GameService {
   public games = gameModel;
   public players = playerModel;
   public playerService = new PlayerService();
   public questions = questionModel;
+  public axios = require('axios');
 
   // returns all the games running
   public async findAllGames(): Promise<Game[]> {
@@ -34,6 +37,8 @@ class GameService {
       leaderboard: leaderboard,
       currentQuestion: currentQuestion,
     });
+
+    //this.sendSyncMessages(createGameData, -1);
 
     return createGameData;
   }
@@ -66,6 +71,9 @@ class GameService {
     if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
 
     const updated: Game = await this.games.findById(updateGameById._id);
+    
+    //this.sendSyncMessages(updated, -1);
+
     return updated;
   }
 
@@ -89,7 +97,7 @@ class GameService {
     const game: Game = await this.getGameByJoinCode(joinCode);
 
     // find all players
-    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (b.totalScore > a.totalScore ? 1 : -1));
+    const players: Player[] = (await this.playerService.findGamePlayers(game)).sort((a, b) => (a.score > b.score ? 1 : -1));
 
     // get updated leaderboard
     const leaderboard: string[] = await this.updateLeaderboard(players);
@@ -123,6 +131,8 @@ class GameService {
 
     const updatedGame: Game = await this.games.findByIdAndUpdate(game._id, { currentQuestion: nextQuestion });
 
+    //this.sendSyncMessages(updatedGame, nextQuestion-1);
+
     return updatedGame;
   }
 
@@ -140,11 +150,72 @@ class GameService {
       maxPlayers = players.length;
     }
     for (let i = 0; i < maxPlayers; i++) {
-      leaderboard.push(players[i].name + ':' + players[i].totalScore.toString());
+      leaderboard.push(players[i].name + ':' + players[i].score.toString());
     }
     return leaderboard;
   }
 
+  // Sync the entire database
+  public async syncDatabase(syncData: SyncDatabaseDto)
+  {
+    
+    // Clear current database
+    await this.games.deleteMany({});
+    await this.players.deleteMany({});
+
+    // Sync games
+    const gameList : Game[] = syncData.gameList;
+    await this.copyGames(gameList);
+
+    // Sync Players
+    await this.copyPlayers(syncData.playerList);
+  }
+
+  public async copyGames(gameList:  Game[])
+  {
+    const promises = gameList.map((game) => this.copyGame(game, this));
+    await Promise.allSettled(promises);
+  }
+
+  public async copyGame(game: Game, self)
+  {
+    await self.games.create({
+      joinCode: game.joinCode,
+      started: game.started,
+      leaderboard: game.leaderboard,
+      currentQuestion: game.currentQuestion
+    });
+  }
+
+  public async copyPlayers(playerList)
+  {
+    playerList.forEach((player) => {this.copyPlayer(player, this)});
+  }
+
+  public async copyPlayer(player, self)
+  {
+    const game : Game = await self.games.findOne({ joinCode: player.joinCode });
+    await self.players.create({ 
+      name: player.name, 
+      game: game, 
+      score: player.score, 
+      active: player.active, 
+      joinCode: player.joinCode });
+  }
+
+   // Send out sync database message
+   public async requestSyncDatabase(requestData: RequestSyncDto)
+   {
+    const url = requestData.url + '/syncDatabase';
+    const data = {
+      gameList: convertGameListToJson(await this.games.find({})),
+      playerList: convertPlayerListToJson(await this.players.find({}))
+    }
+    this.axios.put(url, data).catch(err => {
+      console.log(err, err.response)
+      });
+    }
+  
   public async clearAll() {
     await this.questions.deleteMany({});
     await this.players.deleteMany({});

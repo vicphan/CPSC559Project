@@ -13,12 +13,14 @@ const playerSchema: Schema = new Schema({
     ref: 'Game',
     required: true,
   },
-  totalScore: {
-    type: Number,
+  joinCode: {
+    type: String,
+    required: true
   },
-  scores: [{
+  score: {
     type: Number,
-  }],
+    required: true,
+  },
   active: {
     type: Boolean,
   },
