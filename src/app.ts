@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import { connect, set } from 'mongoose';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { NODE_ENV, PORT, LOG_FORMAT } from './config';
+import { NODE_ENV, PORT, LOG_FORMAT, URL } from './config';
 import { dbConnection } from './databases/dbConnection';
 import { Routes } from './interfaces/routes.interface';
 import errorMiddleware from './middlewares/error.middleware';
@@ -99,23 +99,23 @@ class App {
   }
 
   private syncDatabase() {
-    const fs = require('fs');
-    const allServers = fs.readFileSync('serverList.txt', 'utf-8');	    
-    allServers.split(/\r?\n/).forEach((server) => {	
-      if (server != URL){
+    const servers = [`https://cpsc-559-project.vercel.app`, `https://cpsc-559-project-2.vercel.app`, `https://cpsc-559-project-dl.vercel.app`];
+    servers.forEach(server => {
+      if (server != URL) {
         this.sendSyncRequest(server);
       }
     });
   }
-  
-  private sendSyncRequest(server)
-  {
+
+  private sendSyncRequest(server) {
     const url = server + '/requestSync';
     const data = {
-      url: URL
-    }
-    require('axios').get(url, data).catch(err => {
-      console.log(err, err.response)
+      url: URL,
+    };
+    require('axios')
+      .get(url, data)
+      .catch(err => {
+        console.log(err, err.response);
       });
   }
 }
