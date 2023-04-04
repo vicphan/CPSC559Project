@@ -1,9 +1,9 @@
-import { MONGO_URI } from '../config';
+import { MONGODB_URI } from '../config';
 
 export const dbConnection = {
-  url: MONGO_URI,
+  url: MONGODB_URI,
   options: {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   },
 };
