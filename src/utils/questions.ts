@@ -1,5 +1,20 @@
 export const questions = [
   {
+    question: 'How many kids does Jalal have?',
+    answers: ['0', '1', '2 (that we know of)', 'He went Genghis Khan mode'],
+    correctIndex: 2,
+  },
+  {
+    question: 'Which of the following actors did not appear in the groundbreaking film "Morbius" (2022)?',
+    answers: ['Jared Harris', 'Samuel L. Jackson', 'Jared Leto', 'Matt Smith'],
+    correctIndex: 1,
+  },
+  {
+    question: 'In the video game Among Us, which is not one of the rooms on the spaceship?',
+    answers: ['Trash Compactor', 'Cafeteria', 'Electrical', 'O2'],
+    correctIndex: 0,
+  },
+  {
     question: 'Who is the goddess of agriculture?',
     answers: ['Artemis', 'Hera', 'Athena', 'Demeter'],
     correctIndex: 3,
@@ -53,10 +68,5 @@ export const questions = [
     question: 'What unit is the movement of a computer mouse measured in?',
     answers: ['Mickeys', 'Sydharb', 'Microfortnight', 'Muggeseggele'],
     correctIndex: 0,
-  },
-  {
-    question: 'How many kids does Jalal have?',
-    answers: ['0', '2', 'Too many to count', "He still doesn't know"],
-    correctIndex: 3,
   },
 ];
