@@ -6,6 +6,7 @@
   "license": "ISC",
   "main": "dist/server.js",
   "types": "dist/server.d.ts",
+  "engines": {"node": "18.14.0"},
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc && tsc-alias",
