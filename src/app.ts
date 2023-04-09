@@ -32,7 +32,7 @@ class App {
     this.initializeSwagger();
     this.initializeErrorHandling();
     this.initializeSockets();
-    this.syncDatabase();
+    //this.syncDatabase();
   }
 
   public listen() {
