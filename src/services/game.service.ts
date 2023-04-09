@@ -125,15 +125,13 @@ class GameService {
     let nextQuestion = game.currentQuestion + 1;
 
     const question: Question = await this.questions.findOne({ index: nextQuestion });
-    if (!question) {
-      nextQuestion = 0;
+    if (question) {
+      return await this.games.findByIdAndUpdate(game._id, { currentQuestion: nextQuestion });
     }
-
-    const updatedGame: Game = await this.games.findByIdAndUpdate(game._id, { currentQuestion: nextQuestion });
-
-    //this.sendSyncMessages(updatedGame, nextQuestion-1);
-
-    return updatedGame;
+    else
+    {
+      return await this.games.findByIdAndUpdate(game._id, { started: false });
+    }
   }
 
   public async deleteQuestions(): Promise<void> {
