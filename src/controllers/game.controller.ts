@@ -141,9 +141,9 @@ class GamesController {
   public requestSync = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const requestSyncData: RequestSyncDto = req.body;
-      await this.gameService.requestSyncDatabase(requestSyncData);
+      const code = await this.gameService.requestSyncDatabase(requestSyncData);
 
-      res.status(200).json();
+      res.status(code).json();
     } catch (error) {
       next(error);
     }
