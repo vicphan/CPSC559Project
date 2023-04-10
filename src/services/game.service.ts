@@ -206,14 +206,18 @@ class GameService {
    // Send out sync database message
    public async requestSyncDatabase(requestData: RequestSyncDto)
    {
-    const url = requestData.url + '/syncDatabase';
-    const data = {
-      gameList: convertGameListToJson(await this.games.find({})),
-      playerList: convertPlayerListToJson(await this.players.find({}))
-    }
-    this.axios.put(url, data).catch(err => {
-      console.log(err, err.response)
-      });
+      const url = requestData.url + '/syncDatabase';
+      const data = {
+        gameList: convertGameListToJson(await this.games.find({})),
+        playerList: convertPlayerListToJson(await this.players.find({}))
+      }
+      var code = 200;
+      await this.axios.put(url, data).catch(err => {
+        console.log(err, err.response);
+        code = 555;
+        });
+
+      return code;
     }
   
   public async clearAll() {
