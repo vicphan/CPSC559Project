@@ -49,7 +49,7 @@ class PlayerService {
   public async submitAnswer(playerName: string, gameCode: string, questionData: SubmitQuestionDto): Promise<Player> {
     if (isEmpty(questionData)) throw new HttpException(400, "questionData is empty");
     
-    const player: Player = await this.players.findOne({name: playerName});
+    const player: Player = await this.players.findOne({name: playerName, joinCode: gameCode});
     if (!player) throw new HttpException(444, `Player could not be found`);
 
     const game: Game = await this.games.findOne({ joinCode: gameCode });
