@@ -17,6 +17,7 @@ export function gameToJson(game) {
 
   export function convertGameListToJson(gameList)
   {
+    gameList = gameList.sort(((a, b) => (a.joinCode > b.joinCode) ? 1 : -1));
     gameList.forEach(convertToJson)
     
     return gameList;

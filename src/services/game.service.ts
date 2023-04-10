@@ -143,6 +143,8 @@ class GameService {
   public async updateLeaderboard(players: Player[]): Promise<string[]> {
     const leaderboard: string[] = [];
 
+    players.sort(((a, b) => (a.name > b.name) ? 1 : -1));
+
     let maxPlayers = 10;
     if (players.length < 10) {
       maxPlayers = players.length;
