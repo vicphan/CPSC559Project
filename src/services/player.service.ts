@@ -28,7 +28,7 @@ class PlayerService {
     const gameCode = playerData.joinCode;
 
     const game: Game = await this.games.findOne({ joinCode: gameCode });
-    if (!game) throw new HttpException(404, `Game ${gameCode} could not be found`);
+    if (!game) throw new HttpException(444, `Game ${gameCode} could not be found`);
 
     // check to see if a player with the same playerID already exists
     // playerID is created with the player name + joinCode so that unique names are per game
@@ -46,11 +46,14 @@ class PlayerService {
   }
 
   // Update the players score
-  public async submitAnswer(playerName: string, questionData: SubmitQuestionDto): Promise<Player> {
+  public async submitAnswer(playerName: string, gameCode: string, questionData: SubmitQuestionDto): Promise<Player> {
     if (isEmpty(questionData)) throw new HttpException(400, "questionData is empty");
     
     const player: Player = await this.players.findOne({name: playerName});
-    if (!player) throw new HttpException(404, `Player could not be found`);
+    if (!player) throw new HttpException(444, `Player could not be found`);
+
+    const game: Game = await this.games.findOne({ joinCode: gameCode });
+    if (!game) throw new HttpException(444, `Game ${gameCode} could not be found`);
 
     let newPlayerScore = player.score;
 
@@ -63,6 +66,7 @@ class PlayerService {
 
   // finds the players of the specified game
   public async findGamePlayers(gameID: Game): Promise<Player[]> {
+    
     const players: Player[] = await this.players.find({ game: gameID });
 
     return players;
