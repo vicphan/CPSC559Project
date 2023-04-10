@@ -29,6 +29,8 @@ class PlayerService {
     const game: Game = await this.games.findOne({ joinCode: playerData.joinCode });
     if (!game) throw new HttpException(404, `Game ${playerData.joinCode} could not be found`);
 
+    if (game.started) throw new HttpException(203, `Game ${playerData.joinCode} already started`);
+
     const score = 0;
     const active = true;
 
