@@ -7,7 +7,6 @@ import PlayerService from './player.service';
 import { Question } from '../interfaces/questions.interface';
 import questionModel from '../models/question.model';
 import { RequestSyncDto, SyncDatabaseDto } from '@/dtos/syncDatabase.dto';
-import { URL } from '../config';
 
 class GameService {
   public games = gameModel;
@@ -46,18 +45,23 @@ class GameService {
   // returns a game found by its game ID
   public async getGameByID(gameID: string): Promise<Game> {
     const game: Game = await this.games.findById({ _id: gameID });
+    if (!game) throw new HttpException(444, "Game doesn't exist");
+
     return game;
   }
 
   public async getGameByJoinCode(gameJoinCode: string): Promise<Game> {
     const game: Game = await this.games.findOne({ joinCode: gameJoinCode });
+    if (!game) throw new HttpException(444, "Game doesn't exist");
+
     return game;
   }
 
   // get all the active players in the game
   public async getActivePlayers(gameCode: string) {
     const game: Game = await this.getGameByJoinCode(gameCode);
-    
+    if (!game) throw new HttpException(444, "Game doesn't exist");
+
     // find all players
     const players: Player[] = (await this.playerService.findGamePlayers(game));
     return players;
@@ -68,7 +72,7 @@ class GameService {
     const started = true;
 
     const updateGameById: Game = await this.games.findOneAndUpdate({ joinCode: joinCode }, { started: started });
-    if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
+    if (!updateGameById) throw new HttpException(444, "Game doesn't exist");
 
     const updated: Game = await this.games.findById(updateGameById._id);
     
@@ -87,7 +91,7 @@ class GameService {
     }
 
     const updateGameById: Game = await this.games.findByIdAndDelete(game._id);
-    if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
+    if (!updateGameById) throw new HttpException(444, "Game doesn't exist");
 
     return updateGameById;
   }
@@ -104,7 +108,7 @@ class GameService {
 
     // update game's leaderboard
     const updateGameById: Game = await this.games.findByIdAndUpdate(game._id, { leaderboard: leaderboard });
-    if (!updateGameById) throw new HttpException(409, "Game doesn't exist");
+    if (!updateGameById) throw new HttpException(444, "Game doesn't exist");
 
     return updateGameById;
   }
