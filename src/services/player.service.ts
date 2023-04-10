@@ -25,16 +25,22 @@ class PlayerService {
     if (isEmpty(playerData)) throw new HttpException(400, 'playerData is empty');
 
     const name = playerData.name;
+    const gameCode = playerData.joinCode;
 
-    const game: Game = await this.games.findOne({ joinCode: playerData.joinCode });
-    if (!game) throw new HttpException(404, `Game ${playerData.joinCode} could not be found`);
+    const game: Game = await this.games.findOne({ joinCode: gameCode });
+    if (!game) throw new HttpException(404, `Game ${gameCode} could not be found`);
+
+    // check to see if a player with the same playerID already exists
+    // playerID is created with the player name + joinCode so that unique names are per game
+    const player: Player = await this.players.findOne({playerID: name + gameCode});
+    if(player) throw new HttpException(409, `Player with the name '${name}' in game '${gameCode}' already exists`);
 
     if (game.started) throw new HttpException(203, `Game ${playerData.joinCode} already started`);
 
     const score = 0;
     const active = true;
 
-    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score, active: active, joinCode: playerData.joinCode });
+    const createdPlayerData: Player = await this.players.create({ name: name, game: game, score: score, active: active, joinCode: gameCode, playerID: name + playerData.joinCode });
 
     return createdPlayerData;
   }
