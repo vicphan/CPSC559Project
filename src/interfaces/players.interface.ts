@@ -21,6 +21,7 @@ export function playerToJson(player) {
 
 export function convertPlayerListToJson(playerList)
 {
+  playerList = playerList.sort(((a, b) => (a.name > b.name) ? 1 : -1));
   playerList.forEach(convertToJson)
   
   return playerList;
