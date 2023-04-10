@@ -3,6 +3,7 @@ import gameModel from '../models/game.model';
 
 export interface Player {
   _id: string;
+  playerID: string,
   name: string;
   score: number;
   game: Game;
@@ -12,6 +13,7 @@ export interface Player {
 
 export function playerToJson(player) {
   return {
+    playerID: player.playerID,
     name: player.name,
     score: player.score,
     active: player.active,

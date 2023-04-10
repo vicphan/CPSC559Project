@@ -3,10 +3,14 @@ import { Player } from '../interfaces/players.interface';
 const mongoose = require('mongoose');
 
 const playerSchema: Schema = new Schema({
-  name: {
+  playerID: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
+  },
+  name: {
+    type: String,
+    required: true
   },
   game: {
     type: mongoose.Schema.Types.ObjectId,
