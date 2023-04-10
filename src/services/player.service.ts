@@ -37,6 +37,8 @@ class PlayerService {
 
     if (game.started) throw new HttpException(203, `Game ${playerData.joinCode} already started`);
 
+    if (game.currentQuestion >= 12) throw new HttpException(454, `Game ${playerData.joinCode} has ended`);
+
     const score = 0;
     const active = true;
 
