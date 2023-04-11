@@ -3,6 +3,7 @@ const parent = i => ((i + 1) >>> 1) - 1;
 const left = i => (i << 1) + 1;
 const right = i => (i + 1) << 1;
 
+// Priority Queue class
 class PriorityQueue {
   private _heap;
   private _comparator;
@@ -10,7 +11,7 @@ class PriorityQueue {
     this._heap = [];
     this._comparator = comparator;
   }
-  size() {
+  size(): number {
     return this._heap.length;
   }
   isEmpty() {
@@ -73,3 +74,22 @@ const comparator = (a, b) => {
 };
 
 export const tobQueue = new PriorityQueue(comparator);
+
+export function removeFromPriorityQueue(requestId: string) {
+  const elements = [];
+  while (tobQueue.size() !== 0) {
+    elements.push(tobQueue.pop());
+  }
+  elements.forEach(el => {
+    // If the element doesn't have the same requestID as the one we are removing, reinsert
+    if (el[0] !== requestId) {
+      tobQueue.push(el);
+    }
+  });
+}
+
+export function clearPriorityQueue() {
+  while (tobQueue.size() !== 0) {
+    tobQueue.pop();
+  }
+}

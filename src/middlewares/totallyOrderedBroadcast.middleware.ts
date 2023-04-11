@@ -1,6 +1,6 @@
 import { HttpException } from '../exceptions/HttpException';
 import { isEarlierThanEachOriginsLatestUpdate } from '../utils/latestUpdates';
-import { tobQueue } from '../utils/priorityQueue';
+import { removeFromPriorityQueue, tobQueue } from '../utils/priorityQueue';
 import { sleep } from '../utils/sleep';
 import { NextFunction, Request, Response } from 'express';
 
@@ -27,6 +27,7 @@ export const totallyOrderedBroadcastMiddleware = async (req: Request, res: Respo
     }
     attempts += 1;
     if (attempts === MAX_ATTEMPTS) {
+      removeFromPriorityQueue(requestId);
       next(new HttpException(566, 'Totally ordered broadcast waited too long'));
       return;
     }

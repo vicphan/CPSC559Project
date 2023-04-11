@@ -1,6 +1,7 @@
 import { createQuestions } from '../utils/createQuestions';
 import { NextFunction, Request, Response } from 'express';
 import { clearLatestUpdateTracker, deleteOriginUrlFromUpdateTracker } from '../utils/latestUpdates';
+import { clearPriorityQueue } from '@/utils/priorityQueue';
 
 class IndexController {
   public index = (req: Request, res: Response, next: NextFunction) => {
@@ -35,6 +36,7 @@ class IndexController {
 
   public clearAllTob = (req: Request, res: Response, next: NextFunction) => {
     clearLatestUpdateTracker();
+    clearPriorityQueue();
     res.status(200).send(`cleared`);
   };
 }
