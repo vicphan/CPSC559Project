@@ -11,15 +11,18 @@ class IndexController {
     }
   };
 
+  // Delete and reload all questions
   public resetQuestions = async (req: Request, res: Response, next: NextFunction) => {
     await createQuestions();
     res.status(200).send('Created questions');
   };
 
+  // Pin server (Used for TOB)
   public ping = (req: Request, res: Response, next: NextFunction) => {
     res.status(200).send('pong');
   };
 
+  // Remove a proxy from the list
   public removeProxy = (req: Request, res: Response, next: NextFunction) => {
     const { urlToRemove } = req.body;
     if (!urlToRemove) {
