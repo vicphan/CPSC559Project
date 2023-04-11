@@ -204,7 +204,8 @@ class GameService {
       game: game, 
       score: player.score, 
       active: player.active, 
-      joinCode: player.joinCode });
+      joinCode: player.joinCode,
+      playerID: player.playerID });
   }
 
    // Send out sync database message
