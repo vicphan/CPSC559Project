@@ -6,6 +6,7 @@ export interface Question {
     index: Number;
   }
 
+  // Convert question to JSON
   export function questionToJson(question) {
     return {
       prompt: question.prompt,
