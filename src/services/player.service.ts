@@ -59,6 +59,7 @@ class PlayerService {
 
     let newPlayerScore = player.score;
 
+    // Use score that came with request
     newPlayerScore = newPlayerScore + questionData.correctAnswer;
 
     const updatedPlayer: Player = await this.players.findByIdAndUpdate(player._id, { score: newPlayerScore });

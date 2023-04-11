@@ -37,8 +37,6 @@ class GameService {
       currentQuestion: currentQuestion,
     });
 
-    //this.sendSyncMessages(createGameData, -1);
-
     return createGameData;
   }
 
@@ -50,6 +48,7 @@ class GameService {
     return game;
   }
 
+  // Get the game based on its join code
   public async getGameByJoinCode(gameJoinCode: string): Promise<Game> {
     const game: Game = await this.games.findOne({ joinCode: gameJoinCode });
     if (!game) throw new HttpException(444, "Game doesn't exist");
@@ -67,7 +66,7 @@ class GameService {
     return players;
   }
 
-  // starts a game when players are ready
+  // starts a game based on join code
   public async startGame(joinCode: string): Promise<Game> {
     const started = true;
 
@@ -75,13 +74,11 @@ class GameService {
     if (!updateGameById) throw new HttpException(444, "Game doesn't exist");
 
     const updated: Game = await this.games.findById(updateGameById._id);
-    
-    //this.sendSyncMessages(updated, -1);
 
     return updated;
   }
 
-  // ends the game when the host decides to or all questions have been answered
+  // ends the game when the host decides to
   public async endGame(joinCode: string): Promise<Game> {
     const game: Game = await this.getGameByJoinCode(joinCode);
 
@@ -128,6 +125,7 @@ class GameService {
 
     let nextQuestion = game.currentQuestion + 1;
 
+    // Move to next question, if at last question end game
     const question: Question = await this.questions.findOne({ index: nextQuestion });
     if (question) {
       return await this.games.findByIdAndUpdate(game._id, { currentQuestion: nextQuestion });
@@ -138,6 +136,7 @@ class GameService {
     }
   }
 
+  // Delete all questions
   public async deleteQuestions(): Promise<void> {
     await this.questions.deleteMany({});
   }
@@ -175,12 +174,14 @@ class GameService {
     await this.copyPlayers(syncData.playerList);
   }
 
+  // Copy games into database
   public async copyGames(gameList:  Game[])
   {
     const promises = gameList.map((game) => this.copyGame(game, this));
     await Promise.allSettled(promises);
   }
 
+  // Copy one game into database
   public async copyGame(game: Game, self)
   {
     await self.games.create({
@@ -191,11 +192,13 @@ class GameService {
     });
   }
 
+  // Copy players into database
   public async copyPlayers(playerList)
   {
     playerList.forEach((player) => {this.copyPlayer(player, this)});
   }
 
+  //Copy specific player into database
   public async copyPlayer(player, self)
   {
     const game : Game = await self.games.findOne({ joinCode: player.joinCode });
@@ -212,6 +215,7 @@ class GameService {
    public async requestSyncDatabase(requestData: RequestSyncDto)
    {
       const url = requestData.url + '/syncDatabase';
+      // Send entire database in message
       const data = {
         gameList: convertGameListToJson(await this.games.find({})),
         playerList: convertPlayerListToJson(await this.players.find({}))
@@ -225,6 +229,7 @@ class GameService {
       return code;
     }
   
+    // Clear all data in database
   public async clearAll() {
     await this.questions.deleteMany({});
     await this.players.deleteMany({});
