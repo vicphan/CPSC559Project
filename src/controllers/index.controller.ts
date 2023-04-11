@@ -1,6 +1,6 @@
 import { createQuestions } from '../utils/createQuestions';
 import { NextFunction, Request, Response } from 'express';
-import { deleteOriginUrlFromUpdateTracker } from '../utils/latestUpdates';
+import { clearLatestUpdateTracker, deleteOriginUrlFromUpdateTracker } from '../utils/latestUpdates';
 
 class IndexController {
   public index = (req: Request, res: Response, next: NextFunction) => {
@@ -28,6 +28,11 @@ class IndexController {
     }
     deleteOriginUrlFromUpdateTracker(urlToRemove);
     res.status(200).send(`removed ${urlToRemove} if present`);
+  };
+
+  public clearAllTob = (req: Request, res: Response, next: NextFunction) => {
+    clearLatestUpdateTracker();
+    res.status(200).send(`cleared`);
   };
 }
 
