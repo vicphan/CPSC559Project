@@ -16,6 +16,7 @@ class IndexRoute implements Routes {
     this.router.get(`${this.path}resetQuestions`, this.indexController.resetQuestions);
     this.router.post(`${this.path}removeProxy`, this.indexController.removeProxy);
     this.router.get(`${this.path}ping`, this.indexController.ping);
+    this.router.get(`${this.path}clearTob`, this.indexController.clearAllTob);
   }
 }
 
