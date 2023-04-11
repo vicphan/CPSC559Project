@@ -26,7 +26,7 @@ export const totallyOrderedBroadcastMiddleware = async (req: Request, res: Respo
     }
     attempts += 1;
     if (attempts === MAX_ATTEMPTS) {
-      next(new HttpException(555, 'Totally ordered broadcast waited too long'));
+      next(new HttpException(566, 'Totally ordered broadcast waited too long'));
       return;
     }
     await sleep(100);
