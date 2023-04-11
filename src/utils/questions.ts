@@ -1,7 +1,7 @@
 export const questions = [
   {
     question: 'How many kids does Jalal have?',
-    answers: ['0', '1', '2 (that we know of)', 'He went Genghis Khan mode'],
+    answers: ['0', '1', '2', 'Too many to count'],
     correctIndex: 2,
   },
   {
