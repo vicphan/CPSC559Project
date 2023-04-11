@@ -11,6 +11,7 @@ export interface Player {
   active: Boolean;
 }
 
+//Convert player object to JSON
 export function playerToJson(player) {
   return {
     playerID: player.playerID,
@@ -21,6 +22,7 @@ export function playerToJson(player) {
   }
 }
 
+//Convert list of players to JSON
 export function convertPlayerListToJson(playerList)
 {
   playerList = playerList.sort(((a, b) => (a.name > b.name) ? 1 : -1));
@@ -30,6 +32,7 @@ export function convertPlayerListToJson(playerList)
 
 }
 
+//Convert list element to JSON
 function convertToJson(item, index, arr)
 {
   arr[index] = playerToJson(item);

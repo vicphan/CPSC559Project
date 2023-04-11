@@ -18,7 +18,7 @@ class PlayersController {
     }
   };
 
-  // creates a new player when they join a game
+  // creates a new player to join a specific game
   public createPlayer = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const playerData: CreatePlayerDto = req.body;
@@ -30,6 +30,7 @@ class PlayersController {
     }
   };
 
+  // Submit and answer to a question for a specific player
   public submitAnswer = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const playerName: string = req.params.name;

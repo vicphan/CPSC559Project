@@ -79,7 +79,7 @@ class GamesController {
     }
   };
 
-  // Change to the next question
+  // Change specific game to the next question
   public nextQuestion = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const joinCode: string = req.params.joinCode;
@@ -91,7 +91,7 @@ class GamesController {
     }
   };
 
-  // gets a game by its game ID
+  // gets a game by its join code
   public getGameByJoinCode = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const joinCode: string = req.params.joinCode;
@@ -103,7 +103,7 @@ class GamesController {
     }
   };
 
-  // gets a game by its game ID
+  // gets players in a game
   public getPlayersInGame = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const joinCode: string = req.params.joinCode;
@@ -137,7 +137,7 @@ class GamesController {
     }
   };
 
-  // Request Sync database message
+  // Request that server sends sync message to another database
   public requestSync = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const requestSyncData: RequestSyncDto = req.body;

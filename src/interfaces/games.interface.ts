@@ -6,6 +6,7 @@ export interface Game {
     currentQuestion: number;
   }
 
+//Convert a game to a JSON object, without ID
 export function gameToJson(game) {
     return {
       joinCode: game.joinCode,
@@ -15,6 +16,7 @@ export function gameToJson(game) {
     }
   }
 
+  //Convert a list of games to a JSON object
   export function convertGameListToJson(gameList)
   {
     gameList = gameList.sort(((a, b) => (a.joinCode > b.joinCode) ? 1 : -1));
@@ -24,6 +26,7 @@ export function gameToJson(game) {
   
   }
   
+  //Convert list element to JSON
   function convertToJson(item, index, arr)
   {
     arr[index] = gameToJson(item);
