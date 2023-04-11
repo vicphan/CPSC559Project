@@ -10,6 +10,7 @@ export const totallyOrderedBroadcastMiddleware = async (req: Request, res: Respo
   const originUrl = req.header('originUrl');
   const incomingTimestamp = Number(req.header('lamportTimestamp'));
   const requestId = req.header('requestId');
+  console.log(`o,i,rid,tob: ${originUrl}, ${incomingTimestamp}, ${requestId}, ${req.header('tob')}`);
   if (!req.header('tob') || !originUrl || !incomingTimestamp || !requestId) {
     next();
     return;
@@ -19,8 +20,8 @@ export const totallyOrderedBroadcastMiddleware = async (req: Request, res: Respo
   let attempts = 0;
   while (true) {
     const [headRequestId] = tobQueue.peek();
-    console.log(`HeadReqId: ${headRequestId}`);
     if (headRequestId === requestId && isEarlierThanEachOriginsLatestUpdate(incomingTimestamp)) {
+      console.log(`Applied request id ${headRequestId}`);
       tobQueue.pop();
       break;
     }
